@@ -1,7 +1,11 @@
 # Jogo da cobrinha
 
+# Coisas pra fazer:
+# - a cobra não pode se mexer pra baixo, se ela estiver se mexendo pra cima.
+
 import pygame # Precisamos usar o PyGame, então precisamos importá-lo
 import time # Precisamos disso para esperar 2 segundos antes de fechar o jogo quando o jogador perde.
+import random # Aleatoriedade nas posições da comida.
 
 pygame.init() # Inicializar o PyGame.
 
@@ -32,14 +36,24 @@ snake_initial_x = 0
 snake_initial_y = 0
 
 # Posições iniciais, largura e altura de uma comida fixa no mapa.
-food_x = 30
-food_y = 30
+food_x = 300
+food_y = 300
 food_width = 20
 food_height = 20
+
+score = 0
 
 # Posições x e y ATUAIS da cobra. No começo, elas são as posições iniciais que desejamos configurar.
 snake_x = snake_initial_x
 snake_y = snake_initial_y
+
+snake_y_change = 0
+snake_x_change = 0
+
+snake_speed = 10
+snake_block = 20
+
+snake_grid_scale = 20.0
 
 # Precisamos disso pra conseguir mostrar texto no PyGame.
 font_style = pygame.font.SysFont(None, 50)
@@ -53,9 +67,13 @@ def show_text(text, color):
     # Mandar o PyGame atualizar a tela depois de adicionar alguma coisa, por que se não não vai aparecer.
     pygame.display.update()
 
+clock = pygame.time.Clock() # Velocidade?
 # Loop de jogo.
 # Nós precisamos que o jogo sempre esteja executando, porque caso contrário o script vai chegar ao fim
 # e a janela do jogo vai fechar.
+snake_list = []
+length_of_snake = 1
+
 while not game_over:
     # Ver se "eventos" aconteceram, pegando todos os eventos.
     # Um evento é qualquer atividade do jogador na tela de jogo.
@@ -72,13 +90,17 @@ while not game_over:
         if event.type == pygame.KEYDOWN:
             # Aqui, queremos saber qual seta (direita, esquerda, cima, baixo).
             if event.key == pygame.K_LEFT:
-                snake_x -= 10 # Mover a cobra para a esquerda.
+                snake_x_change = -snake_block # Mover a cobra para a esquerda.
+                snake_y_change = 0
             elif event.key == pygame.K_RIGHT:
-                snake_x += 10 # Mover a cobra para a direita.
+                snake_x_change = snake_block # Mover a cobra para a direita.
+                snake_y_change = 0
             elif event.key == pygame.K_UP:
-                snake_y -= 10 # Mover a cobra para cima.
+                snake_y_change = -snake_block # Mover a cobra para cima.
+                snake_x_change = 0
             elif event.key == pygame.K_DOWN:
-                snake_y += 10 # Mover a cobra para baixo.
+                snake_y_change = snake_block # Mover a cobra para baixo.
+                snake_x_change = 0
 
     # Verificar se a cobra passou dos limites da tela, ou seja, se bateu na parede.
     if snake_x >= game_screen_width or snake_x < 0 or snake_y >= game_screen_height or snake_y < 0:
@@ -90,7 +112,15 @@ while not game_over:
 
     # Aqui vamos ver se a cobra pegou a comida atual.
     if snake_x == food_x and snake_y == food_y:
-        print("Comida") # Por enquanto, só imprimimos no terminal quando isso acontece. Vamos mexer mais nisso na próxima aula!
+        food_x = round(random.randrange(0, game_screen_width - snake_block) / snake_grid_scale) * snake_grid_scale
+        food_y = round(random.randrange(0, game_screen_height - snake_block) / snake_grid_scale) * snake_grid_scale
+        length_of_snake += 1
+        # Teste! Ver como fica a comida nos limites.
+        #food_x = round((game_screen_width - snake_block) / snake_grid_scale) * snake_grid_scale
+        #food_y = round((game_screen_height - snake_block) / snake_grid_scale) * snake_grid_scale
+
+    snake_x = snake_x + snake_x_change
+    snake_y = snake_y + snake_y_change
 
     # Guardar posição e dimensões da cobra.
     snake_position_and_size = [snake_x, snake_y, snake_initial_width, snake_initial_height]
@@ -99,13 +129,32 @@ while not game_over:
     game_screen.fill(black)
 
     # Desenhar um retângulo azul, que é a cobra, considerando a posição e as dimensões desejadas.
-    pygame.draw.rect(game_screen, blue, snake_position_and_size)
+    # pygame.draw.rect(game_screen, blue, snake_position_and_size)
+    snake_head = []
+    snake_head.append(snake_x)
+    snake_head.append(snake_y)
+    snake_list.append(snake_head)
+
+    if len(snake_list) > length_of_snake:
+        del snake_list[0]
+
+    for x in snake_list[:-1]:
+        if x == snake_head:
+            game_over = True
+
+    for x in snake_list:
+        pygame.draw.rect(game_screen, blue, [x[0], x[1], snake_block, snake_block])
+
+    value = font_style.render("Score: " + str(length_of_snake - 1), True, white)
+    game_screen.blit(value, [0, 0])
 
     # Desenhar a comida, também passando como parâmetro as posições e o tamanho.
     pygame.draw.rect(game_screen, red, [food_x, food_y, food_width, food_height])
 
     # Mandar o PyGame atualizar a tela, pra essas figuras aparecerem :)
     pygame.display.update()
+
+    clock.tick(snake_speed) #Velocidade?
 
 # Ao sair do loop de jogo, ou seja, quando game_over = True, vamos fechar a janela do jogo.
 # Sair do jogo e fechar a janela dele.
