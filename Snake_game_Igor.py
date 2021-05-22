@@ -210,13 +210,21 @@ def make_state():
 
 
 def choose_action(ia_S):
-    epsilon = 0.3
+    # Usar o Q!!!
+    epsilon = 0.5   ## Agr esta constante, mas ela deve sempre diminuir
     value = random.random()
-
     if value <= epsilon:
-        return random.choice(["LEFT", "RIGHT", "DOWN", "UP"])
-    
-    # ------------Faltando coisa --------------
+        return random.choice(["UP", "DOWN", "RIGHT", "LEFT"])
+    else:
+        best = 0
+        best_a = ""
+        # escolher com base no valor do Q
+        for a in ["UP", "DOWN", "RIGHT", "LEFT"]:
+            if ia_Q[current_state][a] >= best:
+                best = ia_Q[current_state][a]
+                best_a = a
+
+        return best_a
     
 
 
@@ -261,9 +269,10 @@ while episode_count < episodes:
     episode_count += 1
 
     # Estados e pontuação da IA
-    ia_S = make_state()
-    ia_A = choose_action(ia_S)
     ia_R = 0
+
+    #Estados de um episódio
+    states_and_actions_visited = []
 
     #---------------------Loop para manter o jogo rodando----------------------#
     while not game_over:
@@ -273,18 +282,18 @@ while episode_count < episodes:
                 break
             
 
-            # Trocar isso pela sua IA.
-            vector_change = human_player_agent(event, snake_x_change, snake_y_change)
-            snake_x_change = vector_change[0]
-            snake_y_change = vector_change[1]
+        # Trocar isso pela sua IA.
+        ia_S = make_state()
+        ia_A = choose_action(ia_S)
+        vector_action = get_action_vector(ia_A)
+        snake_x_change = vector_action[0]
+        snake_y_change = vector_action[1]
 
 
         # Atualizar posição da cobrinha
         snake_x = snake_x + snake_x_change
         snake_y = snake_y + snake_y_change
-
-
-        states = make_state()
+        ia_R = -1
         
 
         # Terminar o jogo quando a cobrinha encosta nas bordas.
@@ -292,7 +301,7 @@ while episode_count < episodes:
             game_over = True
             show_text("Você Perdeu", [0,0,0])
             time.sleep(2)
-            ia_R -= 10
+            ia_R = -150
         
 
         # Sortear nova posição da comida quando a cobrinha come
@@ -301,7 +310,7 @@ while episode_count < episodes:
             food_x, food_y = random.choice(posicoes_disponiveis)
             
             length_of_snake += 1
-            ia_R += 10
+            ia_R = 100
 
 
         # Redesenhar a cobrinha
@@ -319,7 +328,7 @@ while episode_count < episodes:
                 game_over = True
                 show_text("Você Perdeu", [0,0,0])
                 time.sleep(2)
-                ia_R -= 10
+                ia_R = -150
         
         if len_snake > length_of_snake:
             del snake_list[0]
@@ -338,19 +347,16 @@ while episode_count < episodes:
         game_screen.blit(value, [0, 0])
 
 
-        # Atualizar o estado da cobrinha
-        ia_S_ = make_state()
-        ia_A_ = choose_action(ia_S_)
+        states_and_actions_visited.append((ia_S, ia_A, ia_R))
 
-        # Faltando atualizar ia_Q
-        ia_S = ia_S_
-        ia_A = ia_A_
 
         # Atualizar o display e congelar brevemente o tempo
         pygame.display.update()
         clock.tick(snake_speed)
     #--------------------------------------------------------------------------#
 
+
+    #---------------------Aprender/ Atualizar o ia_Q---------------------------#
 
 
 #------------------------------Fechar o jogo-------------------------------#
