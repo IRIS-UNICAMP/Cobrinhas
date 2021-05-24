@@ -75,10 +75,13 @@ class Snake:
 
     def can_slither(self) -> bool:
         new_head = self.body[0].translate(self.velocity)
-        if new_head.x < 0 or new_head.x >
+        return new_head.x < 0 or new_head.x >= self.game.screen_width \
+            or new_head.y < 0 or new_head.y >= self.game.screen_height
 
     def slither(self):
         new_head = self.body[0].translate(self.velocity)
+        if not self.can_slither():
+            raise HitWall(f"The snake hit the wall at the coordinates {{x: {new_head.x}, y: {new_head.y}}}")
         self.body.insert(0, new_head)
         self.body.pop()
 
