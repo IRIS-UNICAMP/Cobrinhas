@@ -3,7 +3,7 @@ from enum import Enum
 import random
 
 import pygame
-from pygame import Surface, Font
+from pygame import Surface
 from pygame.time import Clock
 
 from typing import Set, List
@@ -65,18 +65,48 @@ class Snake:
     velocity: Velocity = field(default=None)
     body: List[Coord] = field(default_factory=set)
 
-    def __init__(self, game: GameConfig, screen: Surface, size: int):
+    def __init__(self, game: GameConfig, screen: Surface, config: SnakeConfig):
         self.game = game
         self.screen = screen
+        self.config = config
+
+        self.initialize_body()
+
+    def snaky_linearized_screen(self, max_length=-1) -> List[Coord]:
+        """
+            This function takes the screen coordinates and block size and returns a linearized
+            array of the screen in a "snaky" manner. That is, a linearized 2d-array that follows
+            the "zig-zag" of the snake through the screen.
+        """
+        linearized_vector: List[Coord] = []
+
+        for y in range(0, self.game.screen_height, self.game.block_size):
+            for x in range(0, self.game.screen_width, self.game.block_size):
+                if (y // self.game.block_size) % 2 == 0:
+                    linearized_vector.append(Coord(x, y))
+                else:
+                    if x != 0:
+                        linearized_vector.append(Coord(self.game.screen_width - x, y))
+                    if self.game.screen_width - x == self.game.block_size:
+                        # It's the last iteration, we have to insert one more, otherwise y will be increased
+                        # before we can repeat the x coordinate
+                        linearized_vector.append(Coord(0, y))
+
+                if len(linearized_vector) == max_length:
+                    return linearized_vector
+
+        return linearized_vector
 
     def initialize_body(self):
-        # todo should initialize the snake. For example if we pass a size larger than 1
-        pass
+        # Creating a linearized version of the screen of the size of the snake
+        linearized_vector = self.snaky_linearized_screen(max_length=self.config.initial_length)
+        linearized_vector.reverse()
+        self.body = linearized_vector
 
     def can_slither(self) -> bool:
         new_head = self.body[0].translate(self.velocity)
         return new_head.x < 0 or new_head.x >= self.game.screen_width \
-            or new_head.y < 0 or new_head.y >= self.game.screen_height
+               or new_head.y < 0 or new_head.y >= self.game.screen_height
 
     def slither(self):
         new_head = self.body[0].translate(self.velocity)
@@ -100,6 +130,8 @@ class Food:
     def __init__(self, game: GameConfig, screen: Surface, available_positions: Set[Coord]):
         self.game = game
         self.screen = screen
+
+        # Initializing food position
         self.position = random.choice(list(available_positions))
 
     def can_be_eaten(self, mouth_coord: Coord) -> bool:
@@ -128,12 +160,11 @@ class SnakeGame:
     current_episode: int = 1
     game_over: bool = False
 
-    font_style: Font
     font_position: Coord
     screen_coords: Set[Coord]
 
     clock: Clock = Clock()
-    snake: Snake = Snake()
+    snake: Snake
     snake_config: SnakeConfig
     game: GameConfig
     screen: Surface
@@ -143,9 +174,6 @@ class SnakeGame:
     def _validate_attributes(snake: SnakeConfig, game: GameConfig):
         # todo should raise errors if data is invalid
         return True
-
-    def initialize_snake_state(self):
-        pass
 
     def initialize_screen_coords(self):
         for x in range(0, self.game.screen_width, self.game.block_size):
@@ -167,7 +195,6 @@ class SnakeGame:
         self.screen = pygame.display.set_mode((game.screen_height, game.screen_height))
         self.font_style = pygame.font.SysFont([], game.font_size)
 
-        self.initialize_snake_state()
         self.initialize_screen_coords()
 
         self.food = Food(game, self.screen, self.available_positions)
@@ -178,3 +205,23 @@ class SnakeGame:
     def loop(self):
         while self.current_episode < self.game.number_of_episodes:
             self.game.number_of_episodes += 1
+
+
+if __name__ == '__main__':
+    game_config = GameConfig(
+        screen_height=100,
+        screen_width=100,
+        snake_color=Color.RED,
+        background_color=Color.BLUE,
+        food_color=Color.RED,
+        font_size=50,
+        font_color=Color.RED,
+        block_size=20,
+        number_of_episodes=5
+    )
+
+    snake_config = SnakeConfig(Coord(0, 0), 15, 20)
+
+    snake = Snake(game_config, pygame.display.set_mode(), snake_config)
+
+    print(snake.snaky_linearized_screen())
