@@ -9,31 +9,10 @@ from pygame.time import Clock
 from typing import Set, List, Tuple
 
 
-class HitWall(Exception):
-    pass
-
-
-Color = Tuple[int, int, int]
-
-
-class Colors(Enum):
-    BLUE = (67, 59, 103)
-    RED = (200, 112, 126)
-    SWALLOW_GREEN = (0, 71, 48)
-
-
 @dataclass(frozen=True)
 class Velocity:
     x: int
     y: int
-
-
-class Direction:
-    def __init__(self, block_size):
-        self.up = Velocity(0, -block_size)
-        self.down = Velocity(0, block_size)
-        self.left = Velocity(-block_size, 0)
-        self.right = Velocity(block_size, 0)
 
 
 @dataclass(frozen=True)
@@ -43,6 +22,40 @@ class Coord:
 
     def translate(self, velocity: Velocity):
         return Coord(self.x + velocity.x, self.y + velocity.y)
+
+
+class WallHit(Exception):
+    def __init__(self, coord: Coord):
+        self.coord = coord
+
+    def __str__(self):
+        return f"The snake hit the wall at the coordinates (x: {self.coord.x}, y: {self.coord.y})"
+
+
+class BodyHit(Exception):
+    def __init__(self, coord: Coord):
+        self.coord = coord
+
+    def __str__(self):
+        return f"The snake hit its own body at the coordinates (x: {self.coord.x}, y: {self.coord.y})"
+
+
+Color = Tuple[int, int, int]
+
+
+class Colors(Enum):
+    BLUE = (67, 59, 103)
+    RED = (200, 112, 126)
+    SWALLOW_GREEN = (0, 71, 48)
+    HEAD = (0, 255, 150)
+
+
+class Direction:
+    def __init__(self, block_size):
+        self.up = Velocity(0, -block_size)
+        self.down = Velocity(0, block_size)
+        self.left = Velocity(-block_size, 0)
+        self.right = Velocity(block_size, 0)
 
 
 @dataclass(frozen=True)
@@ -55,13 +68,13 @@ class GameConfig:
     font_size: int
     font_color: Color
     swallow_color: Color
+    head_color: Color
     block_size: int
     number_of_episodes: int
 
 
 @dataclass(frozen=True)
 class SnakeConfig:
-    initial_position: Coord
     speed: int
     initial_length: int = field(default=1)
 
@@ -88,22 +101,31 @@ class Snake:
     def change_velocity(self, velocity: Velocity):
         self._velocity = velocity
 
-    def can_slither(self) -> bool:
+    def can_slither(self) -> Exception:
         new_head = self._body[0].translate(self._velocity)
-        return not (new_head.x < 0 or new_head.x >= self.game_config.screen_width
-                    or new_head.y < 0 or new_head.y >= self.game_config.screen_height)
+        wall_danger = new_head.x < 0 or new_head.x >= self.game_config.screen_width \
+                   or new_head.y < 0 or new_head.y >= self.game_config.screen_height
+        body_danger = new_head in self._body
+
+        if wall_danger:
+            return WallHit(new_head)
+        if body_danger:
+            return BodyHit(new_head)
 
     def slither(self, has_eaten: bool):
         head = self._body[0].translate(self._velocity)
         # print(f"Slithering head to ({head.x},{head.y})")
-        if not self.can_slither():
-            raise HitWall(f"The snake hit the wall at the coordinates {{x: {head.x}, y: {head.y}}}")
+        evaluation = self.can_slither()
+        if evaluation is not None:
+            raise evaluation
+
         self._body.insert(0, head)
         if not has_eaten:
             tail = self._body.pop()
             self._erase_block(tail)
-
-        self._paint_block(head)
+            if len(self._body) > 1:
+                self._paint_block(self._body[1])
+        self._paint_head(head)
 
     def _snaky_linearized_screen(self, max_length=-1) -> List[Coord]:
         """
@@ -148,6 +170,10 @@ class Snake:
 
     def _erase_block(self, coord: Coord):
         pygame.draw.rect(self.screen, self.game_config.background_color,
+                         [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
+
+    def _paint_head(self, coord: Coord):
+        pygame.draw.rect(self.screen, self.game_config.head_color,
                          [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
     def _paint(self):
@@ -245,13 +271,15 @@ class SnakeGame:
         self.screen = pygame.display.set_mode((game_config.screen_height, game_config.screen_height))
         # self.font_style = pygame.font.SysFont([], game_config.font_size)
 
-        self.snake = Snake(game_config, self.screen, snake_config)
-
     def loop(self):
-        self.screen.fill(self.game_config.background_color)
-        self.food = Food(self.game_config, self.screen, self.available_positions)
-        pygame.display.update()
         while self.current_episode < self.game_config.number_of_episodes:
+            # Repaint the whole screen
+            self.screen.fill(self.game_config.background_color)
+            self.snake = Snake(self.game_config, self.screen, self.snake_config)
+            self.food = Food(self.game_config, self.screen, self.available_positions)
+            pygame.display.update()
+
+            # Initialize variables
             self.current_episode += 1
             self.game_over = False
             has_eaten = False
@@ -273,9 +301,10 @@ class SnakeGame:
 
                     pygame.display.update()
                     self.clock.tick(self.snake_config.speed)
-            except HitWall as e:
+            except WallHit as e:
                 print(e)
-
+            except BodyHit as e:
+                print(e)
 
 
 if __name__ == '__main__':
@@ -288,14 +317,14 @@ if __name__ == '__main__':
         font_size=50,
         font_color=Colors.RED.value,
         swallow_color=Colors.SWALLOW_GREEN.value,
+        head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=5
+        number_of_episodes=50
     )
 
     _snake_config = SnakeConfig(
-        initial_position=Coord(0, 0),
         speed=15,
-        initial_length=2
+        initial_length=10
     )
 
     _game = SnakeGame(
