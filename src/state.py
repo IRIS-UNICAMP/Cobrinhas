@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from src.configs import GameConfig
 from src.shared import Coord
 from src.snake import Snake
@@ -98,3 +100,26 @@ class State:
 
     def __str__(self):
         return self.state()
+
+
+class StateActionInfo:
+    counter: int = 0  # N
+    value: float = 0  # Q(s,a)
+
+
+class StateAction:
+    history: List[Dict] = list()
+    state_action_value: Dict = {}
+
+    def increment_counter(self, state: str, direction: str):
+        self.state_action_value[state][direction].counter += 1
+
+    def reinforce_action(self, state: str, direction: str, reinforcement: float):
+        self.state_action_value[state][direction].value += reinforcement
+
+    def save_to_history(self, state: str, direction: str, reward: float):
+        self.history.append({
+            state: {
+                direction: reward
+            }
+        })

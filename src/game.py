@@ -197,6 +197,8 @@ class SnakeGame:
 
                     self.snake.slither(has_eaten)
 
+                    # This will tell the snake printer function to not
+                    # erase it's tail if a food has been eaten. this way you will gain size
                     has_eaten = False
                     if self.food.can_be_eaten(self.snake.head):
                         self.food.eat(self.available_positions)
