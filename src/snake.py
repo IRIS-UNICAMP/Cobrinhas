@@ -21,7 +21,7 @@ class Snake:
         self._initialize_body()
 
     @property
-    def mouth(self) -> Coord:
+    def head(self) -> Coord:
         return self._body[0]
 
     @property

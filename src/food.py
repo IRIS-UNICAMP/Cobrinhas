@@ -18,12 +18,16 @@ class Food:
         self._score = 0
 
         # Initializing food position
-        self.position = random.choice(list(available_positions))
+        self._position = random.choice(list(available_positions))
         self.paint()
 
     @property
     def score(self):
         return str(self._score)
+
+    @property
+    def position(self):
+        return self._position
 
     def can_be_eaten(self, mouth_coord: Coord) -> bool:
         return self.position == mouth_coord
@@ -35,7 +39,7 @@ class Food:
 
     def _replace(self, new_position):
         self._erase()
-        self.position = new_position
+        self._position = new_position
         self.paint()
 
     def _erase(self):

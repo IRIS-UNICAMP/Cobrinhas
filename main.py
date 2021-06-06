@@ -15,7 +15,7 @@ if __name__ == '__main__':
         head_color=Colors.HEAD.value,
         block_size=20,
         number_of_episodes=50,
-        block_interactions=True
+        block_interactions=False
     )
 
     _snake_config = SnakeConfig(
