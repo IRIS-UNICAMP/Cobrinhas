@@ -96,7 +96,7 @@ class Snake:
         linearized_vector.reverse()
         self._body = linearized_vector
         self._set_default_velocity()
-        self._paint()
+        self.paint()
 
     def _paint_block(self, coord: Coord):
         pygame.draw.rect(self.screen, self.game_config.snake_color,
@@ -110,6 +110,6 @@ class Snake:
         pygame.draw.rect(self.screen, self.game_config.head_color,
                          [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
-    def _paint(self):
+    def paint(self):
         for x in self._body:
             self._paint_block(x)

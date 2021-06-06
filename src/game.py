@@ -7,8 +7,10 @@ from typing import Set
 from src.configs import GameConfig, SnakeConfig
 from src.exceptions import SnakeGameException
 from src.food import Food
-from src.shared import Velocity, Coord, Direction
+from src.shared import Velocity, Coord, Direction, Colors
 from src.snake import Snake
+
+pygame.init()
 
 
 def human_player_agent(event, block_size: int, current_velocity: Velocity) -> Velocity:
@@ -50,6 +52,36 @@ class SnakeGame:
         # todo should raise errors if data is invalid
         return True
 
+    def _show_text(self, text, color, coord: Coord, font=None):
+        if font is None:
+            font = self.font_style
+        text_object = font.render(text, True, color)
+        self.screen.blit(text_object, coord.to_array())
+        pygame.display.update()
+        self.food.paint()
+
+    def _erase_text(self, text, coord: Coord, font=None):
+        if font is None:
+            font = self.font_style
+        text_width, text_height = font.size(text)
+        self.screen.fill(self.game_config.background_color, [coord.x, coord.y, text_width, text_height])
+        self.food.paint()
+
+    def show_score(self):
+        text = f"Score: {self.food.score}"
+        erase_text = f"Score: {int(self.food.score)-1}"
+        self._erase_text(erase_text, self.start_coords)
+        self._show_text(text, Colors.LAVENDER_BLUSH.value, self.start_coords)
+
+    def toggle_pause_text(self):
+        text = "Paused"
+        text_width, _ = self.pause_font_style.size(text)
+        text_coords = Coord(self.top_right.x - text_width, self.top_right.y)
+        if self.paused:
+            self._show_text(text, Colors.GOLD.value, text_coords, self.pause_font_style)
+        else:
+            self._erase_text(text, text_coords, self.pause_font_style)
+
     @property
     def screen_coords(self):
         if self._screen_coords is not None:
@@ -65,6 +97,18 @@ class SnakeGame:
     def available_positions(self):
         return self.screen_coords - set(self.snake.body)
 
+    @property
+    def center_coords(self) -> Coord:
+        return Coord(self.game_config.screen_width // 2 - 50, self.game_config.screen_height // 2 - 100)
+
+    @property
+    def start_coords(self) -> Coord:
+        return Coord(0, 0)
+
+    @property
+    def top_right(self):
+        return Coord(self.game_config.screen_width, 0)
+
     def __init__(self,
                  snake_config: SnakeConfig,
                  game_config: GameConfig
@@ -74,7 +118,8 @@ class SnakeGame:
         self.game_config = game_config
 
         self.screen = pygame.display.set_mode((game_config.screen_height, game_config.screen_height))
-        # self.font_style = pygame.font.SysFont([], game_config.font_size)
+        self.font_style = pygame.font.SysFont([], game_config.font_size)
+        self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
 
     def loop(self):
         while self.current_episode < self.game_config.number_of_episodes:
@@ -96,6 +141,7 @@ class SnakeGame:
                         if event.type == pygame.KEYDOWN:
                             if event.key == 112:  # letter p
                                 self.paused = not self.paused
+                                self.toggle_pause_text()
 
                         if self.paused:
                             break
@@ -123,6 +169,7 @@ class SnakeGame:
                     if self.food.can_be_eaten(self.snake.mouth):
                         self.food.eat(self.available_positions)
                         has_eaten = True
+                        self.show_score()
                     pygame.display.update()
                     self.clock.tick(self.snake_config.speed)
             except SnakeGameException as e:

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple
+from typing import Tuple, List
+
+import pygame
 
 
 @dataclass(frozen=True)
@@ -17,12 +19,17 @@ class Coord:
     def translate(self, velocity: Velocity):
         return Coord(self.x + velocity.x, self.y + velocity.y)
 
+    def to_array(self) -> List:
+        return [self.x, self.y]
+
 
 class Colors(Enum):
     BLUE = (67, 59, 103)
     RED = (200, 112, 126)
     SWALLOW_GREEN = (0, 71, 48)
     HEAD = (0, 255, 150)
+    GOLD = pygame.color.Color('gold3')
+    LAVENDER_BLUSH = pygame.color.Color('lavenderblush3')
 
 
 class Direction:
