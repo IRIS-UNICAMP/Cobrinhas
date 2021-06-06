@@ -17,6 +17,7 @@ class GameConfig:
     block_size: int
     number_of_episodes: int
     block_interactions: bool
+    missed_food_max_steps: int
 
 
 @dataclass(frozen=True)

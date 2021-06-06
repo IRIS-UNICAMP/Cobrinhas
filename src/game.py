@@ -6,10 +6,11 @@ from pygame.time import Clock
 
 from typing import Set
 
+from src.agent import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
-from src.exceptions import SnakeGameException, QuitGame
+from src.exceptions import SnakeGameException, QuitGame, TooDumb
 from src.food import Food
-from src.shared import Velocity, Coord, Direction, Colors
+from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress
 from src.snake import Snake
 from src.state import State
 
@@ -45,8 +46,19 @@ def put_random_dir(queue):
     queue.post(new_event)
 
 
+def put_keypress_event(queue, action: Action):
+    key = map_action_to_keypress(action)
+    new_event = pygame.event.Event(pygame.KEYDOWN, unicode='', key=key, mod=pygame.KMOD_NONE)
+    # For some reason we have to repost every event in the queue when we pause the game
+    events = queue.get()
+    for e in events:
+        queue.post(e)
+    queue.post(new_event)
+
+
 class SnakeGame:
     score: int = 0
+    best_score: int = 0
     current_episode: int = 1
     game_over: bool = False
     paused: bool = False
@@ -61,6 +73,24 @@ class SnakeGame:
     screen: Surface
     food: Food
     state: State = State()
+    agent: MonteCarloAgent
+    default_reward: int = 10
+    food_reward: int = 100
+    punishment: int = -100
+
+    def __init__(self,
+                 snake_config: SnakeConfig,
+                 game_config: GameConfig,
+                 agent: MonteCarloAgent
+                 ):
+        SnakeGame._validate_attributes(snake_config, game_config)
+        self.snake_config = snake_config
+        self.game_config = game_config
+        self.agent = agent
+
+        self.screen = pygame.display.set_mode((game_config.screen_height, game_config.screen_height))
+        self.font_style = pygame.font.SysFont([], game_config.font_size)
+        self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
 
     @staticmethod
     def _validate_attributes(snake: SnakeConfig, game: GameConfig):
@@ -156,18 +186,6 @@ class SnakeGame:
                 # to hit your own body and lose, even though we check for consistency in the agent.
                 break
 
-    def __init__(self,
-                 snake_config: SnakeConfig,
-                 game_config: GameConfig
-                 ):
-        SnakeGame._validate_attributes(snake_config, game_config)
-        self.snake_config = snake_config
-        self.game_config = game_config
-
-        self.screen = pygame.display.set_mode((game_config.screen_height, game_config.screen_height))
-        self.font_style = pygame.font.SysFont([], game_config.font_size)
-        self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
-
     def loop(self):
         while self.current_episode < self.game_config.number_of_episodes:
             # Repaint the whole screen
@@ -180,13 +198,20 @@ class SnakeGame:
             self.current_episode += 1
             self.game_over = False
             has_eaten = False
+            action: Action = Action.UP  # Random action for initialization
             try:
                 # Running an episode
+                missed_food_times = 0
                 while not self.game_over:
                     # Here we define the state and take the best action
-                    self.state.populate(self.snake, self.food.position, self.game_config)
+                    self.state.populate(self.snake, self.food.position, self.game_config).set_state()
                     # print(self.state)
-                    put_random_dir(pygame.event)
+                    # put_random_dir(pygame.event)
+
+                    # Choosing the best action given the current state
+                    # and putting the keypress event in the queue
+                    action = self.agent.choose_action(self.state.value)
+                    put_keypress_event(pygame.event, action)
 
                     # Process the current events in the queue
                     self.process_events()
@@ -204,10 +229,35 @@ class SnakeGame:
                         self.food.eat(self.available_positions)
                         has_eaten = True
                         self.show_score()
+                        self.agent.save_to_history(self.state.value, action, self.food_reward)
+                        missed_food_times = 0
+                    else:
+                        self.agent.save_to_history(self.state.value, action, self.default_reward)
+                        missed_food_times += 1
+
+                    if missed_food_times > self.game_config.missed_food_max_steps:
+                        raise TooDumb()
+
                     pygame.display.update()
                     self.clock.tick(self.snake_config.speed)
             except SnakeGameException as e:
                 print(e)
+                self.agent.save_to_history(self.state.value, action, self.punishment)
+            except TooDumb as e:
+                print(e)
+                self.agent.save_to_history(self.state.value, action, self.punishment)
             except QuitGame:
                 print('Exiting..')
                 return
+
+            # End of episode!!
+            print(f"Reinforcing episode {self.current_episode}/{self.game_config.number_of_episodes}. "
+                  f"Score was {self.score}")
+            self.agent.episode_reinforcement()
+            if self.score > self.best_score:
+                self.best_score = self.score
+
+        # End of experiment!!
+        print(f"End of experiment.\n"
+              f"Best score was {self.best_score}\n"
+              f"Epsilon was {self.agent.policy.epsilon}")

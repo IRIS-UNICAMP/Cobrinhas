@@ -23,6 +23,26 @@ class Coord:
         return [self.x, self.y]
 
 
+class Action(Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+    LEFT = "LEFT"
+    RIGHT = "RIGHT"
+
+
+def map_action_to_keypress(action: Action):
+    if action == Action.UP:
+        return pygame.K_UP
+    elif action == Action.DOWN:
+        return pygame.K_DOWN
+    elif action == Action.LEFT:
+        return pygame.K_LEFT
+    elif action == Action.RIGHT:
+        return pygame.K_RIGHT
+    else:
+        raise ValueError(f"Unknown action {str(action)}")
+
+
 class Colors(Enum):
     BLUE = (67, 59, 103)
     RED = (200, 112, 126)
