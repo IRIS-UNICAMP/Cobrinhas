@@ -135,7 +135,6 @@ class SnakeGame:
                 print("Blocking human interaction")
                 continue
 
-            print(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.paused = not self.paused
                 self.toggle_pause_text()
