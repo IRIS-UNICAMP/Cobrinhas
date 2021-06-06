@@ -33,6 +33,7 @@ class SnakeGame:
     score: int = 0
     current_episode: int = 1
     game_over: bool = False
+    paused: bool = False
 
     # font_position: Coord = None
     _screen_coords: Set[Coord] = None
@@ -92,6 +93,13 @@ class SnakeGame:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             return
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == 112:  # letter p
+                                self.paused = not self.paused
+
+                        if self.paused:
+                            break
+
                         old_velocity = self.snake.velocity
                         new_velocity = human_player_agent(event, self.game_config.block_size, self.snake.velocity)
                         self.snake.change_velocity(new_velocity)
@@ -105,6 +113,9 @@ class SnakeGame:
                             # when the snake is going right. If you do both commands in a frame interval you are going
                             # to hit your own body and lose, even though we check for consistency in the agent.
                             break
+
+                    if self.paused:
+                        continue
 
                     self.snake.slither(has_eaten)
 
