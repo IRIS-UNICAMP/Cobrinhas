@@ -39,6 +39,9 @@ class Direction:
         self.left = Velocity(-block_size, 0)
         self.right = Velocity(block_size, 0)
 
+    def all(self) -> List[Velocity]:
+        return [self.up, self.down, self.left, self.right]
+
 
 Color = Tuple[int, int, int]
 

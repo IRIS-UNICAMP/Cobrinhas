@@ -16,6 +16,7 @@ class GameConfig:
     head_color: Color
     block_size: int
     number_of_episodes: int
+    block_interactions: bool
 
 
 @dataclass(frozen=True)

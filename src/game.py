@@ -1,3 +1,5 @@
+import random
+
 import pygame
 from pygame import Surface
 from pygame.time import Clock
@@ -13,7 +15,7 @@ from src.snake import Snake
 pygame.init()
 
 
-def human_player_agent(event, block_size: int, current_velocity: Velocity) -> Velocity:
+def velocity_interpreter(event, block_size: int, current_velocity: Velocity) -> Velocity:
     directions = Direction(block_size)
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
@@ -29,6 +31,12 @@ def human_player_agent(event, block_size: int, current_velocity: Velocity) -> Ve
             if current_velocity != directions.up:
                 return directions.down
     return current_velocity
+
+
+def put_random_dir(queue):
+    rand_key = random.choice([pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN])
+    new_event = pygame.event.Event(pygame.KEYDOWN, unicode='', key=rand_key, mod=pygame.KMOD_NONE)
+    queue.post(new_event)
 
 
 class SnakeGame:
@@ -83,7 +91,7 @@ class SnakeGame:
             self._erase_text(text, text_coords, self.pause_font_style)
 
     @property
-    def screen_coords(self):
+    def screen_coords_list(self):
         if self._screen_coords is not None:
             return self._screen_coords
         else:
@@ -95,7 +103,7 @@ class SnakeGame:
 
     @property
     def available_positions(self):
-        return self.screen_coords - set(self.snake.body)
+        return self.screen_coords_list - set(self.snake.body)
 
     @property
     def center_coords(self) -> Coord:
@@ -135,11 +143,21 @@ class SnakeGame:
             has_eaten = False
             try:
                 while not self.game_over:
+
+                    put_random_dir(pygame.event)
+
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             return
+
+                        # This means manual user input
+                        if hasattr(event, "scancode"):
+                            if self.game_config.block_interactions:
+                                print("Blocking human interaction")
+                                continue
+
                         if event.type == pygame.KEYDOWN:
-                            if event.key == 112:  # letter p
+                            if event.key == pygame.K_p:  # letter p
                                 self.paused = not self.paused
                                 self.toggle_pause_text()
 
@@ -147,7 +165,7 @@ class SnakeGame:
                             break
 
                         old_velocity = self.snake.velocity
-                        new_velocity = human_player_agent(event, self.game_config.block_size, self.snake.velocity)
+                        new_velocity = velocity_interpreter(event, self.game_config.block_size, self.snake.velocity)
                         self.snake.change_velocity(new_velocity)
                         if old_velocity != new_velocity:
                             # This is important because the pygame.event attribute is queue.

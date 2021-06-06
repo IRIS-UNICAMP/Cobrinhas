@@ -14,7 +14,8 @@ if __name__ == '__main__':
         swallow_color=Colors.SWALLOW_GREEN.value,
         head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=50
+        number_of_episodes=50,
+        block_interactions=True
     )
 
     _snake_config = SnakeConfig(
