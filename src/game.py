@@ -139,7 +139,6 @@ class SnakeGame:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.paused = not self.paused
                 self.toggle_pause_text()
-                pygame.event.clear()
 
             if self.paused:
                 break
