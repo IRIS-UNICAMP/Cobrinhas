@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum, Enum
 from typing import Tuple, List
 
 import pygame
@@ -63,10 +63,10 @@ class Direction:
         return [self.up, self.down, self.left, self.right]
 
 
-class ActionTakerPolicy(Enum):
+class ActionTakerPolicy(IntEnum):
     HUMAN = 0
     AI_AGENT = 1
-    MIXED = 3
+    MIXED = 2
 
 
 Color = Tuple[int, int, int]

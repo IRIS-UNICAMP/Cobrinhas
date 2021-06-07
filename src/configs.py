@@ -26,7 +26,7 @@ class GameConfig:
     speed_delta: int
 
 
-@dataclass
+@dataclass()
 class SnakeConfig:
     speed: int
     initial_length: int = field(default=1)

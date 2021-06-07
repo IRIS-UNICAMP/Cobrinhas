@@ -222,6 +222,25 @@ class SnakeGame:
                 # to hit your own body and lose, even though we check for consistency in the agent.
                 break
 
+    def build_dump_object_info(self):
+        agent_results = self.agent.state_action_values
+        return {
+            "header": {
+                "game_config": self.game_config.__dict__,
+                "snake_config": self.snake_config.__dict__,
+                "state_meaning": self.state.dict(),
+                "statistics": {
+                    "best_score": self.best_score,
+                    "best_score_episode": self.best_score_episode,
+                    "dumb_snake": self.too_dumb_counter,
+                    "died_wall": self.died_wall_hit_counter,
+                    "died_body": self.died_body_hit_counter,
+                    "agent": self.agent.dict()
+                }
+            },
+            "agent_rehearsal": agent_results
+        }
+
     def loop(self):
         while self.current_episode < self.game_config.number_of_episodes:
             # Repaint the whole screen
@@ -296,8 +315,7 @@ class SnakeGame:
                 self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except QuitGame:
                 print('Exiting..')
-                self.agent.dump_results_to_file()
-                return
+                return self.build_dump_object_info()
 
             if self.game_config.action_taker_policy == ActionTakerPolicy.AI_AGENT:
                 self.human_turn = False
@@ -325,4 +343,5 @@ class SnakeGame:
         print(f"End of experiment.\n"
               f"Best score was {self.best_score}\n"
               f"Epsilon was {self.agent.policy.epsilon}")
-        self.agent.dump_results_to_file()
+        return self.build_dump_object_info()
+

@@ -63,6 +63,14 @@ class MonteCarloAgent:
         self._policy = Policy()
         self._policy.epsilon_step = epsilon_step_increment
 
+    def dict(self):
+        return {
+            "gamma": self._gamma,
+            "every_visit": self._every_visit,
+            "epsilon": self.policy.epsilon,
+            "epsilon_step_increment": self.policy.epsilon_step
+        }
+
     @property
     def state_amount(self) -> int:
         return len(self._state_action_value.keys())
@@ -169,9 +177,6 @@ class MonteCarloAgent:
             factor += record.reward * pow(self._gamma, step)
         return factor
 
-    def dump_results_to_file(self):
-        timestamp = math.floor(time())
-        path = f"result_{timestamp}.json"
-        print(f"Dumping results to file {path}")
-        with open(path, "w") as fp:
-            json.dump(self._state_action_value, fp, sort_keys=True, indent=4)
+    @property
+    def state_action_values(self):
+        return self._state_action_value
