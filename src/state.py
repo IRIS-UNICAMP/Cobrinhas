@@ -68,10 +68,10 @@ class State:
         state += str(int(self._food_below))
         state += str(int(self._food_above))
 
-        state += str(int(self._going_left))
-        state += str(int(self._going_right))
-        state += str(int(self._going_up))
-        state += str(int(self._going_down))
+        # state += str(int(self._going_left))
+        # state += str(int(self._going_right))
+        # state += str(int(self._going_up))
+        # state += str(int(self._going_down))
 
         # state += str(int(going_to_food_right))
         # state += str(int(going_to_food_left))
@@ -83,6 +83,8 @@ class State:
         state += str(int(danger_right))
         state += str(int(danger_down))
         state += str(int(danger_up))
+
+        # 1010100011001
 
         self._state = state
     

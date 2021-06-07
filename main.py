@@ -7,8 +7,8 @@ import math
 
 if __name__ == '__main__':
     _game_config = GameConfig(
-        screen_height=600,
-        screen_width=600,
+        screen_height=440,
+        screen_width=440,
         snake_color=Colors.RED.value,
         background_color=Colors.BLUE.value,
         food_color=Colors.RED.value,
@@ -17,13 +17,13 @@ if __name__ == '__main__':
         swallow_color=Colors.SWALLOW_GREEN.value,
         head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=1000,
+        number_of_episodes=10000,
         block_interactions=False,
-        missed_food_max_steps=10000,
+        missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
-        default_reward=0,
+        default_reward=0.1,
         food_reward=10,
-        punishment=-10
+        punishment=-1
     )
 
     _snake_config = SnakeConfig(
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     _agent = MonteCarloAgent(
         every_visit=True,
-        gamma=0.5,
+        gamma=0.2,
         epsilon_step_increment=1
     )
 

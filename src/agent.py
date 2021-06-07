@@ -99,7 +99,7 @@ class MonteCarloAgent:
         # Reinforce (Q(s,a))
         state_action_value = self._state_action_value[record.state][record.action.value].value
         state_action_count = self._state_action_value[record.state][record.action.value].counter
-        new_sate_action_value = state_action_value + 1 / (state_action_count * (factor - state_action_value))
+        new_sate_action_value = state_action_value + ((1 / state_action_count) * (factor - state_action_value))
         self._state_action_value[record.state][record.action.value].value = new_sate_action_value
 
     def _reset_visited_flag(self):
@@ -117,12 +117,19 @@ class MonteCarloAgent:
             return random.choice(actions)
         else:
             best_action: StateActionInfo = StateActionInfo(Action.UP)
+            best_action.value = float('-inf')
+            last_value = self._state_action_value[state][actions[0].value].value
+            all_equal = True
             for action in actions:
-                if self._state_action_value[state][action.value].value > best_action.value:
+                current_value = self._state_action_value[state][action.value].value
+                all_equal = (all_equal and last_value == current_value)
+                last_value = current_value
+                if current_value > best_action.value:
                     best_action = self._state_action_value[state][action.value]
 
             # There was no better action
-            if best_action.value == 0:
+            if all_equal:
+                print('choosing random')
                 return random.choice(actions)
 
             return best_action.action
@@ -142,9 +149,6 @@ class MonteCarloAgent:
         if self._last_reinforcement_factor < factor:
             self._last_reinforcement_factor = factor
 
-        # Only change the epsilon if results were satisfactory
-        # if factor > 0:
-        # if self._last_reinforcement_factor < factor:
         self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
 
         print(
@@ -155,7 +159,7 @@ class MonteCarloAgent:
 
     def _calculate_reinforcement_factor(self):
         factor = 0
-        for step, record in enumerate(self._history):
+        for step, record in enumerate(self._history[::-1]):
             factor += record.reward * pow(self._gamma, step)
         return factor
 

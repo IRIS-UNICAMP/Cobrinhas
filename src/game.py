@@ -58,6 +58,7 @@ def put_keypress_event(queue, action: Action):
 
 class SnakeGame:
     best_score: int = 0
+    best_score_episode: int = 0
     current_episode: int = 1
     paused: bool = False
 
@@ -224,9 +225,11 @@ class SnakeGame:
                     # Choosing the best action given the current state
                     # and putting the keypress event in the queue
                     if not self.human_turn:
+                        self.game_config.block_interactions = True
                         action = self.agent.choose_action(self.state.value)
                         put_keypress_event(pygame.event, action)
                     else:
+                        self.game_config.block_interactions = False
                         self.agent.init_state_if_needed(self.state.value)
 
                     # Process the current events in the queue
@@ -268,6 +271,7 @@ class SnakeGame:
                 self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except QuitGame:
                 print('Exiting..')
+                self.agent.dump_results_to_file()
                 return
 
             if self.game_config.action_taker_policy == ActionTakerPolicy.AI_AGENT:
@@ -281,12 +285,14 @@ class SnakeGame:
 
             # End of episode!!
             print(f"Reinforcing episode {self.current_episode}/{self.game_config.number_of_episodes}. "
-                  f"Score was {self.food.score}. Best score is {self.best_score}.\n"
+                  f"Score was {self.food.score}. Best score is {self.best_score} made in episode "
+                  f"{self.best_score_episode}.\n"
                   f"There are {self.agent.state_amount} states registered.\n"
                   f"The snake didn't know what to do {self.too_dumb_counter} times and died {self.died_counter} times.")
             self.agent.episode_reinforcement()
             if int(self.food.score) > self.best_score:
                 self.best_score = int(self.food.score)
+                self.best_score_episode = self.current_episode
 
         # End of experiment!!
         print(f"End of experiment.\n"
