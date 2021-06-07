@@ -8,7 +8,7 @@ from typing import Set
 
 from src.agent import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
-from src.exceptions import SnakeGameException, QuitGame, TooDumb
+from src.exceptions import SnakeGameException, QuitGame, TooDumb, WallHit, BodyHit
 from src.food import Food
 from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress, ActionTakerPolicy
 from src.snake import Snake
@@ -75,7 +75,8 @@ class SnakeGame:
     agent: MonteCarloAgent
 
     too_dumb_counter = 0
-    died_counter = 0
+    died_wall_hit_counter = 0
+    died_body_hit_counter = 0
 
     human_turn: bool = False
 
@@ -282,7 +283,11 @@ class SnakeGame:
             except SnakeGameException as e:
                 print('\n\n')
                 print(e)
-                self.died_counter += 1
+                if isinstance(e, WallHit):
+                    self.died_wall_hit_counter += 1
+                elif isinstance(e, BodyHit):
+                    self.died_body_hit_counter += 1
+
                 self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except TooDumb as e:
                 print('\n\n')
@@ -308,7 +313,9 @@ class SnakeGame:
                   f"Score was {self.food.score}. Best score is {self.best_score} made in episode "
                   f"{self.best_score_episode}.\n"
                   f"There are {self.agent.state_amount} states registered.\n"
-                  f"The snake didn't know what to do {self.too_dumb_counter} times and died {self.died_counter} times.")
+                  f"The snake was lost {self.too_dumb_counter} times.\n"
+                  f"The snake died from wall hit {self.died_wall_hit_counter} times.\n"
+                  f"The snake died from body hit {self.died_body_hit_counter} times.\n",)
             self.agent.episode_reinforcement()
             if int(self.food.score) > self.best_score:
                 self.best_score = int(self.food.score)

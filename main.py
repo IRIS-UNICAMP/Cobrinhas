@@ -21,7 +21,7 @@ if __name__ == '__main__':
         block_interactions=False,
         missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
-        default_reward=0.1,
+        default_reward=1,
         food_reward=10,
         punishment=-10,
         show_game=True,
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     _agent = MonteCarloAgent(
         every_visit=True,
         gamma=0.5,
-        epsilon_step_increment=0.7
+        epsilon_step_increment=0.9
     )
 
     _game = SnakeGame(

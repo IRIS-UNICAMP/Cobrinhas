@@ -1,6 +1,15 @@
+from typing import List
+
 from src.configs import GameConfig
 from src.shared import Coord
 from src.snake import Snake
+
+
+def build_state_str(values: List[bool]):
+    state = ''
+    for v in values:
+        state += str(int(v))
+    return state
 
 
 class State:
@@ -60,14 +69,33 @@ class State:
         going_to_food_above = self._food_above and self._going_up
         going_to_food_below = self._food_below and self._going_down
 
+        going_to_food = going_to_food_below or going_to_food_above or going_to_food_left or going_to_food_right
+
         # O estado é uma string de uma sequência de digitos que será recebido por uma
         # função ação valor para decidir o movimento da cobrinha.
-        state = ''
-        state += str(int(self._food_right))
-        state += str(int(self._food_left))
-        state += str(int(self._food_below))
-        state += str(int(self._food_above))
-
+        state_values = [
+            self._food_right,
+            self._food_left,
+            self._food_below,
+            self._food_above,
+            #
+            # self._wall_left,
+            # self._wall_right,
+            # self._wall_above,
+            # self._wall_below,
+            #
+            # self._body_left,
+            # self._body_right,
+            # self._body_above,
+            # self._body_below,
+            # going_to_food,
+            # danger_ahead,
+            danger_left,
+            danger_right,
+            danger_down,
+            danger_up,
+        ]
+        state = build_state_str(state_values)
         # state += str(int(self._going_left))
         # state += str(int(self._going_right))
         # state += str(int(self._going_up))
@@ -77,12 +105,6 @@ class State:
         # state += str(int(going_to_food_left))
         # state += str(int(going_to_food_above))
         # state += str(int(going_to_food_below))
-
-        state += str(int(danger_ahead))
-        state += str(int(danger_left))
-        state += str(int(danger_right))
-        state += str(int(danger_down))
-        state += str(int(danger_up))
 
         # 1010100011001
 
