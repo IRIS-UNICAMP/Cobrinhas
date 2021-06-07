@@ -19,22 +19,22 @@ if __name__ == '__main__':
         block_size=20,
         number_of_episodes=1000,
         block_interactions=False,
-        missed_food_max_steps=1500,
+        missed_food_max_steps=10000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
-        default_reward=0.5,
-        food_reward=100,
-        punishment=-100
+        default_reward=0,
+        food_reward=10,
+        punishment=-10
     )
 
     _snake_config = SnakeConfig(
-        speed=40,
+        speed=100,
         initial_length=1
     )
 
     _agent = MonteCarloAgent(
-        every_visit=False,
-        gamma=0.2,
-        epsilon_step_increment=0.2
+        every_visit=True,
+        gamma=0.5,
+        epsilon_step_increment=1
     )
 
     _game = SnakeGame(

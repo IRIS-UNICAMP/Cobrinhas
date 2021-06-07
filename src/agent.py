@@ -144,8 +144,8 @@ class MonteCarloAgent:
 
         # Only change the epsilon if results were satisfactory
         # if factor > 0:
-        if self._last_reinforcement_factor < factor:
-            self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
+        # if self._last_reinforcement_factor < factor:
+        self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
 
         print(
             f"Factor: {factor}; Last Best Factor: {self._last_reinforcement_factor};  Epsilon: {self._policy.epsilon}")
