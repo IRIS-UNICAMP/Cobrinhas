@@ -10,7 +10,7 @@ from src.agent import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.exceptions import SnakeGameException, QuitGame, TooDumb
 from src.food import Food
-from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress
+from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress, ActionTakerPolicy
 from src.snake import Snake
 from src.state import State
 
@@ -57,10 +57,8 @@ def put_keypress_event(queue, action: Action):
 
 
 class SnakeGame:
-    score: int = 0
     best_score: int = 0
     current_episode: int = 1
-    game_over: bool = False
     paused: bool = False
 
     # font_position: Coord = None
@@ -74,9 +72,14 @@ class SnakeGame:
     food: Food
     state: State = State()
     agent: MonteCarloAgent
-    default_reward: int = 10
-    food_reward: int = 100
-    punishment: int = -100
+    default_reward: int = 1
+    food_reward: int = 5
+    punishment: int = -10
+
+    too_dumb_counter = 0
+    died_counter = 0
+
+    human_turn: bool = False
 
     def __init__(self,
                  snake_config: SnakeConfig,
@@ -165,8 +168,22 @@ class SnakeGame:
                 print("Blocking human interaction")
                 continue
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                self.paused = not self.paused
+            unpause_keys = [pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP]
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_t:
+                    # toggle action taker between ia agent and mixed
+                    is_mixed = self.game_config.action_taker_policy == ActionTakerPolicy.MIXED
+                    if is_mixed:
+                        self.game_config.action_taker_policy = ActionTakerPolicy.AI_AGENT
+                    else:
+                        self.game_config.action_taker_policy = ActionTakerPolicy.MIXED
+
+                if event.key == pygame.K_p:
+                    # toggle pause
+                    self.paused = not self.paused
+                if self.paused and event.key in unpause_keys:
+                    self.paused = False
+
                 self.toggle_pause_text()
 
             if self.paused:
@@ -196,13 +213,12 @@ class SnakeGame:
 
             # Initialize variables
             self.current_episode += 1
-            self.game_over = False
             has_eaten = False
             action: Action = Action.UP  # Random action for initialization
             try:
                 # Running an episode
                 missed_food_times = 0
-                while not self.game_over:
+                while True:
                     # Here we define the state and take the best action
                     self.state.populate(self.snake, self.food.position, self.game_config).set_state()
                     # print(self.state)
@@ -210,8 +226,11 @@ class SnakeGame:
 
                     # Choosing the best action given the current state
                     # and putting the keypress event in the queue
-                    action = self.agent.choose_action(self.state.value)
-                    put_keypress_event(pygame.event, action)
+                    if not self.human_turn:
+                        action = self.agent.choose_action(self.state.value)
+                        put_keypress_event(pygame.event, action)
+                    else:
+                        self.agent.init_state_if_needed(self.state.value)
 
                     # Process the current events in the queue
                     self.process_events()
@@ -241,23 +260,39 @@ class SnakeGame:
                     pygame.display.update()
                     self.clock.tick(self.snake_config.speed)
             except SnakeGameException as e:
+                print('\n\n')
                 print(e)
+                self.died_counter += 1
                 self.agent.save_to_history(self.state.value, action, self.punishment)
             except TooDumb as e:
+                print('\n\n')
                 print(e)
+                self.too_dumb_counter += 1
                 self.agent.save_to_history(self.state.value, action, self.punishment)
             except QuitGame:
                 print('Exiting..')
                 return
 
+            if self.game_config.action_taker_policy == ActionTakerPolicy.AI_AGENT:
+                self.human_turn = False
+            elif self.game_config.action_taker_policy == ActionTakerPolicy.HUMAN:
+                self.human_turn = True
+            else:
+                self.human_turn = not self.human_turn
+                self.paused = True
+                self.toggle_pause_text()
+
             # End of episode!!
             print(f"Reinforcing episode {self.current_episode}/{self.game_config.number_of_episodes}. "
-                  f"Score was {self.score}")
+                  f"Score was {self.food.score}. Best score is {self.best_score}.\n"
+                  f"There are {self.agent.state_amount} states registered out of {2**9} possible ones.\n"
+                  f"The snake didn't know what to do {self.too_dumb_counter} times and died {self.died_counter} times.")
             self.agent.episode_reinforcement()
-            if self.score > self.best_score:
-                self.best_score = self.score
+            if int(self.food.score) > self.best_score:
+                self.best_score = int(self.food.score)
 
         # End of experiment!!
         print(f"End of experiment.\n"
               f"Best score was {self.best_score}\n"
               f"Epsilon was {self.agent.policy.epsilon}")
+        self.agent.dump_results_to_file()

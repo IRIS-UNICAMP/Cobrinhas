@@ -1,6 +1,9 @@
 import random
 from dataclasses import dataclass
 from typing import List, Dict
+import json
+from time import time
+import math
 
 from src.shared import Action
 
@@ -14,7 +17,7 @@ class StateActionInfo:
         self.action = action
 
     def __str__(self):
-        return "{}"
+        return f"{{counter: {self.counter}, value: {self.value}, action: {self.action.value}}}"
 
 
 @dataclass()
@@ -39,9 +42,15 @@ class MonteCarloAgent:
     _policy = Policy()
     _last_reinforcement_factor = float('-inf')
 
-    def __init__(self, every_visit: bool = False, gamma=0.99999):
+    def __init__(self, every_visit: bool = False, gamma=1.01, epsilon_step_increment=0.1):
         self._gamma = gamma
         self._every_visit = every_visit
+        self._policy = Policy()
+        self._policy.epsilon_step = epsilon_step_increment
+
+    @property
+    def state_amount(self) -> int:
+        return len(self._state_action_value.keys())
 
     @property
     def policy(self) -> Policy:
@@ -57,7 +66,7 @@ class MonteCarloAgent:
             )
         )
 
-    def _init_state_if_needed(self, state: str):
+    def init_state_if_needed(self, state: str):
         # Initializing specific state dict
         if state not in self._state_action_value.keys():
             self._state_action_value[state] = {
@@ -85,7 +94,7 @@ class MonteCarloAgent:
             self._state_action_value[state]["has_been_visited"] = False
 
     def choose_action(self, state) -> Action:
-        self._init_state_if_needed(state)
+        self.init_state_if_needed(state)
 
         random_value = random.random()
         actions = [e for e in Action]
@@ -115,13 +124,16 @@ class MonteCarloAgent:
 
         self._episode_counter += 1
 
-        # Only change the epsilon if results were satisfactory
         if self._last_reinforcement_factor < factor:
             self._last_reinforcement_factor = factor
+
+        # Only change the epsilon if results were satisfactory
+        if factor > 0:
             self._policy.epsilon = 1 / ((1/self._policy.epsilon) + self._policy.epsilon_step)
 
         print(f"Factor: {factor}; Last Best Factor: {self._last_reinforcement_factor};  Epsilon: {self._policy.epsilon}")
-
+        if not self._every_visit:
+            self._reset_visited_flag()
         self._history = []
 
     def _calculate_reinforcement_factor(self):
@@ -129,3 +141,8 @@ class MonteCarloAgent:
         for step, record in enumerate(self._history):
             factor += record.reward * pow(self._gamma, step)
         return factor
+
+    def dump_results_to_file(self):
+        timestamp = math.floor(time())
+        with open(f"result_{timestamp}.json", "w") as fp:
+            json.dump(self._state_action_value, fp)

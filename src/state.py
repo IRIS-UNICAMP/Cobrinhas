@@ -63,15 +63,20 @@ class State:
         # O estado é uma string de uma sequência de digitos que será recebido por uma
         # função ação valor para decidir o movimento da cobrinha.
         state = ''
-        # state += str(int(self._food_right))
-        # state += str(int(self._food_left))
-        # state += str(int(self._food_below))
-        # state += str(int(self._food_above))
+        state += str(int(self._food_right))
+        state += str(int(self._food_left))
+        state += str(int(self._food_below))
+        state += str(int(self._food_above))
 
-        state += str(int(going_to_food_right))
-        state += str(int(going_to_food_left))
-        state += str(int(going_to_food_above))
-        state += str(int(going_to_food_below))
+        state += str(int(self._going_left))
+        state += str(int(self._going_right))
+        state += str(int(self._going_up))
+        state += str(int(self._going_down))
+
+        # state += str(int(going_to_food_right))
+        # state += str(int(going_to_food_left))
+        # state += str(int(going_to_food_above))
+        # state += str(int(going_to_food_below))
 
         state += str(int(danger_ahead))
         state += str(int(danger_left))

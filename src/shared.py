@@ -63,5 +63,11 @@ class Direction:
         return [self.up, self.down, self.left, self.right]
 
 
+class ActionTakerPolicy(Enum):
+    HUMAN = 0
+    AI_AGENT = 1
+    MIXED = 3
+
+
 Color = Tuple[int, int, int]
 

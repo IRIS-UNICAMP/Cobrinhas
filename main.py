@@ -1,7 +1,7 @@
 from src.agent import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.game import SnakeGame
-from src.shared import Colors
+from src.shared import Colors, ActionTakerPolicy
 
 if __name__ == '__main__':
     _game_config = GameConfig(
@@ -15,17 +15,22 @@ if __name__ == '__main__':
         swallow_color=Colors.SWALLOW_GREEN.value,
         head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=10000,
+        number_of_episodes=1000,
         block_interactions=False,
-        missed_food_max_steps=150
+        missed_food_max_steps=1000,
+        action_taker_policy=ActionTakerPolicy.MIXED
     )
 
     _snake_config = SnakeConfig(
-        speed=20,
+        speed=40,
         initial_length=1
     )
 
-    _agent = MonteCarloAgent()
+    _agent = MonteCarloAgent(
+        every_visit=True,
+        gamma=1.07,
+        epsilon_step_increment=0.3
+    )
 
     _game = SnakeGame(
         snake_config=_snake_config,

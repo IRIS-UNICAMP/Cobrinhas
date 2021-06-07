@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from src.shared import Color
+from src.shared import Color, ActionTakerPolicy
 
 
-@dataclass(frozen=True)
+@dataclass()
 class GameConfig:
     screen_height: int
     screen_width: int
@@ -18,6 +18,7 @@ class GameConfig:
     number_of_episodes: int
     block_interactions: bool
     missed_food_max_steps: int
+    action_taker_policy: ActionTakerPolicy
 
 
 @dataclass(frozen=True)
