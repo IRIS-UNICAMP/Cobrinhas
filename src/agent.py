@@ -132,6 +132,13 @@ class MonteCarloAgent:
                 print('choosing random')
                 return random.choice(actions)
 
+            # up = self._state_action_value[state][Action.UP.value].value
+            # down = self._state_action_value[state][Action.DOWN.value].value
+            # left = self._state_action_value[state][Action.LEFT.value].value
+            # right = self._state_action_value[state][Action.RIGHT.value].value
+            # actions_str = f"Actions were UP: {up}, DOWN: {down}, LEFT: {left}, RIGHT: {right}.\nChose: " \
+            #               f"{best_action.action.value}."
+            # print(actions_str)
             return best_action.action
 
     def episode_reinforcement(self):
@@ -148,8 +155,7 @@ class MonteCarloAgent:
 
         if self._last_reinforcement_factor < factor:
             self._last_reinforcement_factor = factor
-
-        self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
+            self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
 
         print(
             f"Factor: {factor}; Last Best Factor: {self._last_reinforcement_factor};  Epsilon: {self._policy.epsilon}")
@@ -159,11 +165,13 @@ class MonteCarloAgent:
 
     def _calculate_reinforcement_factor(self):
         factor = 0
-        for step, record in enumerate(self._history):
+        for step, record in enumerate(self._history[::-1]):
             factor += record.reward * pow(self._gamma, step)
         return factor
 
     def dump_results_to_file(self):
         timestamp = math.floor(time())
-        with open(f"result_{timestamp}.json", "w") as fp:
+        path = f"result_{timestamp}.json"
+        print(f"Dumping results to file {path}")
+        with open(path, "w") as fp:
             json.dump(self._state_action_value, fp, sort_keys=True, indent=4)

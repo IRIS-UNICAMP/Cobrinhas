@@ -22,9 +22,11 @@ class GameConfig:
     default_reward: float
     food_reward: int
     punishment: int
+    show_game: bool
+    speed_delta: int
 
 
-@dataclass(frozen=True)
+@dataclass
 class SnakeConfig:
     speed: int
     initial_length: int = field(default=1)

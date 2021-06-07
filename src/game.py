@@ -93,6 +93,10 @@ class SnakeGame:
         self.font_style = pygame.font.SysFont([], game_config.font_size)
         self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
 
+    def update_display(self):
+        if self.game_config.show_game:
+            pygame.display.update()
+
     @staticmethod
     def _validate_attributes(snake: SnakeConfig, game: GameConfig):
         # todo should raise errors if data is invalid
@@ -103,7 +107,7 @@ class SnakeGame:
             font = self.font_style
         text_object = font.render(text, True, color)
         self.screen.blit(text_object, coord.to_array())
-        pygame.display.update()
+        self.update_display()
         self.food.paint()
 
     def _erase_text(self, text, coord: Coord, font=None):
@@ -115,7 +119,7 @@ class SnakeGame:
 
     def show_score(self):
         text = f"Score: {self.food.score}"
-        erase_text = f"Score: {int(self.food.score)-1}"
+        erase_text = f"Score: {int(self.food.score) - 1}"
         self._erase_text(erase_text, self.start_coords)
         self._show_text(text, Colors.LAVENDER_BLUSH.value, self.start_coords)
 
@@ -161,11 +165,6 @@ class SnakeGame:
             if event.type == pygame.QUIT:
                 raise QuitGame()
 
-            # This means manual user input
-            if hasattr(event, "scancode") and self.game_config.block_interactions:
-                print("Blocking human interaction")
-                continue
-
             unpause_keys = [pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP]
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_t:
@@ -176,13 +175,34 @@ class SnakeGame:
                     else:
                         self.game_config.action_taker_policy = ActionTakerPolicy.MIXED
 
-                if event.key == pygame.K_p:
+                elif event.key == pygame.K_KP_PLUS:
+                    self.snake.config.speed += self.game_config.speed_delta
+                    print(f"Current speed is {self.snake.config.speed}")
+
+                elif event.key == pygame.K_KP_MINUS:
+                    if self.snake.config.speed > 0:
+                        if self.snake.config.speed < self.game_config.speed_delta:
+                            self.snake.config.speed = 0
+                        else:
+                            self.snake.config.speed -= self.game_config.speed_delta
+                    print(f"Current speed is {self.snake.config.speed}")
+
+                elif event.key == pygame.K_p:
                     # toggle pause
                     self.paused = not self.paused
-                if self.paused and event.key in unpause_keys:
+                    self.toggle_pause_text()
+                elif self.paused and event.key in unpause_keys and hasattr(event, "scancode"):
                     self.paused = False
+                    self.toggle_pause_text()
 
-                self.toggle_pause_text()
+                ###############################################################
+                #    From this comment down, user commands will be ignored    #
+                #                                                             #
+                #    This means manual user input                             #
+                elif hasattr(event, "scancode") and self.game_config.block_interactions:
+                    print("Blocking human interaction")
+                    continue
+                ###############################################################
 
             if self.paused:
                 break
@@ -207,7 +227,7 @@ class SnakeGame:
             self.screen.fill(self.game_config.background_color)
             self.snake = Snake(self.game_config, self.screen, self.snake_config)
             self.food = Food(self.game_config, self.screen, self.available_positions)
-            pygame.display.update()
+            self.update_display()
 
             # Initialize variables
             self.current_episode += 1
@@ -257,7 +277,7 @@ class SnakeGame:
                     if missed_food_times > self.game_config.missed_food_max_steps:
                         raise TooDumb()
 
-                    pygame.display.update()
+                    self.update_display()
                     self.clock.tick(self.snake_config.speed)
             except SnakeGameException as e:
                 print('\n\n')
