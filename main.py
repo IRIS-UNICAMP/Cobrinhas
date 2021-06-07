@@ -23,7 +23,7 @@ if __name__ == '__main__':
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
         default_reward=0.1,
         food_reward=10,
-        punishment=-1
+        punishment=-10
     )
 
     _snake_config = SnakeConfig(

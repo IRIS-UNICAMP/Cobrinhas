@@ -159,7 +159,7 @@ class MonteCarloAgent:
 
     def _calculate_reinforcement_factor(self):
         factor = 0
-        for step, record in enumerate(self._history[::-1]):
+        for step, record in enumerate(self._history):
             factor += record.reward * pow(self._gamma, step)
         return factor
 
