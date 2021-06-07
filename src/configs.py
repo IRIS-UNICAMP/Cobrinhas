@@ -19,6 +19,9 @@ class GameConfig:
     block_interactions: bool
     missed_food_max_steps: int
     action_taker_policy: ActionTakerPolicy
+    default_reward: float
+    food_reward: int
+    punishment: int
 
 
 @dataclass(frozen=True)

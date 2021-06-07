@@ -2,6 +2,8 @@ from src.agent import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.game import SnakeGame
 from src.shared import Colors, ActionTakerPolicy
+from time import time
+import math
 
 if __name__ == '__main__':
     _game_config = GameConfig(
@@ -17,8 +19,11 @@ if __name__ == '__main__':
         block_size=20,
         number_of_episodes=1000,
         block_interactions=False,
-        missed_food_max_steps=1000,
-        action_taker_policy=ActionTakerPolicy.MIXED
+        missed_food_max_steps=1500,
+        action_taker_policy=ActionTakerPolicy.AI_AGENT,
+        default_reward=0.5,
+        food_reward=100,
+        punishment=-100
     )
 
     _snake_config = SnakeConfig(
@@ -27,9 +32,9 @@ if __name__ == '__main__':
     )
 
     _agent = MonteCarloAgent(
-        every_visit=True,
-        gamma=1.07,
-        epsilon_step_increment=0.3
+        every_visit=False,
+        gamma=0.2,
+        epsilon_step_increment=0.2
     )
 
     _game = SnakeGame(
@@ -38,5 +43,8 @@ if __name__ == '__main__':
         agent=_agent
     )
 
+    start = time()
     # Run the game
     _game.loop()
+    end = time()
+    print(f"\nElapsed time: {math.floor(end-start)} seconds")

@@ -72,9 +72,6 @@ class SnakeGame:
     food: Food
     state: State = State()
     agent: MonteCarloAgent
-    default_reward: int = 1
-    food_reward: int = 5
-    punishment: int = -10
 
     too_dumb_counter = 0
     died_counter = 0
@@ -248,10 +245,10 @@ class SnakeGame:
                         self.food.eat(self.available_positions)
                         has_eaten = True
                         self.show_score()
-                        self.agent.save_to_history(self.state.value, action, self.food_reward)
+                        self.agent.save_to_history(self.state.value, action, self.game_config.food_reward)
                         missed_food_times = 0
                     else:
-                        self.agent.save_to_history(self.state.value, action, self.default_reward)
+                        self.agent.save_to_history(self.state.value, action, self.game_config.default_reward)
                         missed_food_times += 1
 
                     if missed_food_times > self.game_config.missed_food_max_steps:
@@ -263,12 +260,12 @@ class SnakeGame:
                 print('\n\n')
                 print(e)
                 self.died_counter += 1
-                self.agent.save_to_history(self.state.value, action, self.punishment)
+                self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except TooDumb as e:
                 print('\n\n')
                 print(e)
                 self.too_dumb_counter += 1
-                self.agent.save_to_history(self.state.value, action, self.punishment)
+                self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except QuitGame:
                 print('Exiting..')
                 return
@@ -285,7 +282,7 @@ class SnakeGame:
             # End of episode!!
             print(f"Reinforcing episode {self.current_episode}/{self.game_config.number_of_episodes}. "
                   f"Score was {self.food.score}. Best score is {self.best_score}.\n"
-                  f"There are {self.agent.state_amount} states registered out of {2**9} possible ones.\n"
+                  f"There are {self.agent.state_amount} states registered.\n"
                   f"The snake didn't know what to do {self.too_dumb_counter} times and died {self.died_counter} times.")
             self.agent.episode_reinforcement()
             if int(self.food.score) > self.best_score:

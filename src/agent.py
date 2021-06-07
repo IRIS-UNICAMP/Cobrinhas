@@ -7,6 +7,18 @@ import math
 
 from src.shared import Action
 
+from json import JSONEncoder
+
+
+# Tip taken from:
+# https://stackoverflow.com/a/38764817/12603421
+def _default(self, obj):
+    return getattr(obj.__class__, "to_json", _default.default)(obj)
+
+
+_default.default = JSONEncoder().default
+JSONEncoder.default = _default
+
 
 class StateActionInfo:
     counter: int = 0  # N
@@ -16,8 +28,11 @@ class StateActionInfo:
     def __init__(self, action: Action):
         self.action = action
 
-    def __str__(self):
-        return f"{{counter: {self.counter}, value: {self.value}, action: {self.action.value}}}"
+    def to_json(self):
+        return {
+            "counter": self.counter,
+            "value": self.value,
+        }
 
 
 @dataclass()
@@ -84,7 +99,7 @@ class MonteCarloAgent:
         # Reinforce (Q(s,a))
         state_action_value = self._state_action_value[record.state][record.action.value].value
         state_action_count = self._state_action_value[record.state][record.action.value].counter
-        new_sate_action_value = state_action_value + 1/(state_action_count * (factor - state_action_value))
+        new_sate_action_value = state_action_value + 1 / (state_action_count * (factor - state_action_value))
         self._state_action_value[record.state][record.action.value].value = new_sate_action_value
 
     def _reset_visited_flag(self):
@@ -128,10 +143,12 @@ class MonteCarloAgent:
             self._last_reinforcement_factor = factor
 
         # Only change the epsilon if results were satisfactory
-        if factor > 0:
-            self._policy.epsilon = 1 / ((1/self._policy.epsilon) + self._policy.epsilon_step)
+        # if factor > 0:
+        if self._last_reinforcement_factor < factor:
+            self._policy.epsilon = 1 / ((1 / self._policy.epsilon) + self._policy.epsilon_step)
 
-        print(f"Factor: {factor}; Last Best Factor: {self._last_reinforcement_factor};  Epsilon: {self._policy.epsilon}")
+        print(
+            f"Factor: {factor}; Last Best Factor: {self._last_reinforcement_factor};  Epsilon: {self._policy.epsilon}")
         if not self._every_visit:
             self._reset_visited_flag()
         self._history = []
@@ -145,4 +162,4 @@ class MonteCarloAgent:
     def dump_results_to_file(self):
         timestamp = math.floor(time())
         with open(f"result_{timestamp}.json", "w") as fp:
-            json.dump(self._state_action_value, fp)
+            json.dump(self._state_action_value, fp, sort_keys=True, indent=4)
