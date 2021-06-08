@@ -58,7 +58,7 @@ snake_x_change = 0
 snake_y_change = 0
 
 # Velocidade da cobrinha
-snake_speed = 150
+snake_speed = 0
 #--------------------------------------------------------------------------#
 
 
@@ -88,7 +88,7 @@ font_style = pygame.font.SysFont(None, 50)
 def show_text(text, color):
     text_object =  font_style.render(text, True, color)
     game_screen.blit(text_object, [game_screen_weight/2 - 100, game_screen_width/2 - 50])
-    pygame.display.update()
+    #pygame.display.update()
 #--------------------------------------------------------------------------#
 
 
@@ -155,13 +155,13 @@ def make_state():
     wall_down = (snake_y + snake_block >= game_screen_weight)
 
     # Se há parede e está indo em direção a ela --Perigo--
-    going_left_wall_ahead = going_left and wall_left
-    going_right_wall_ahead = going_right and wall_right
-    going_down_wall_ahead = going_down and wall_down
-    going_up_wall_ahead = going_up and wall_up
+    #going_left_wall_ahead = going_left and wall_left
+    #going_right_wall_ahead = going_right and wall_right
+    #going_down_wall_ahead = going_down and wall_down
+    #going_up_wall_ahead = going_up and wall_up
 
     # Perigo de uma parede
-    wall_ahead = going_left_wall_ahead or going_right_wall_ahead or going_down_wall_ahead or going_up_wall_ahead
+    #wall_ahead = going_left_wall_ahead or going_right_wall_ahead or going_down_wall_ahead or going_up_wall_ahead
 
     # Posição do corpo da cobrinha em relação a cabeça
     body_left = ((snake_x - snake_block, snake_y) in snake_list)
@@ -170,16 +170,16 @@ def make_state():
     body_up = ((snake_x, snake_y - snake_block) in snake_list)
 
     # Se a cobrinha está indo em direção a uma parte do corpo
-    going_left_body_ahead = going_left and body_left
-    going_right_body_ahead = going_right and body_right
-    going_down_body_ahead = going_down and body_down
-    going_up_body_ahead = going_up and body_up
+    #going_left_body_ahead = going_left and body_left
+    #going_right_body_ahead = going_right and body_right
+    #going_down_body_ahead = going_down and body_down
+    #going_up_body_ahead = going_up and body_up
 
     # Perigo de uma parte do corpo como obstáculo
-    body_ahead = going_left_body_ahead or going_right_body_ahead or going_down_body_ahead or going_up_body_ahead
+    #body_ahead = going_left_body_ahead or going_right_body_ahead or going_down_body_ahead or going_up_body_ahead
 
     # Perigo em alguma direção
-    danger_ahead = wall_ahead or body_ahead
+    #danger_ahead = wall_ahead or body_ahead
     danger_left = wall_left or body_left
     danger_right = wall_right or body_right
     danger_down = wall_down or body_down
@@ -199,7 +199,7 @@ def make_state():
     state += str(int(going_down))
     state += str(int(going_up))
 
-    state += str(int(danger_ahead))
+    #state += str(int(danger_ahead))
     state += str(int(danger_left))
     state += str(int(danger_right))
     state += str(int(danger_down))
@@ -227,7 +227,7 @@ def get_action_vector(action):
 
 def choose_action(ia_S):
 
-    epsilon = 5/(5 + ia_N_S.get(ia_S, 0))  ## Aumentar a cte 1 para testes
+    epsilon = 1/(1 + ia_N_S.get(ia_S, 0))  ## Aumentar a cte 1 para testes
     
     value = random.random()
     if value <= epsilon:
@@ -237,7 +237,7 @@ def choose_action(ia_S):
         return action
     else:
         # escolher melhor ação com base no valor do Q
-        best = -1000000000000000000000
+        best = -math.inf
         best_a = ""
         for a in ["UP", "DOWN", "RIGHT", "LEFT"]:
             action_value = ia_Q[ia_S].get(a, 0)   # As ações que ainda não estao no dict para um dado estado, terão previsão 0
@@ -247,7 +247,7 @@ def choose_action(ia_S):
         
 
         # Escolher segunda melhor ação
-        second_best = -1000000000000000000000
+        second_best = -math.inf
         second_best_a = ""
         for a in ["UP", "DOWN", "RIGHT", "LEFT"]:
             action_value = ia_Q[ia_S].get(a, 0)
@@ -269,11 +269,12 @@ def choose_action(ia_S):
 #----------------------Repetição do jogo em vários episódios para treinar a IA---------------------#
 
 episode_count = 0
-episodes = 10000
+episodes = 200000
 ia_Q = {}
 ia_N_S_A = {}
 ia_N_S = {}
 gamma = 0.2
+max_score = 1
 
 while episode_count < episodes:
     # Fim de jogo
@@ -297,11 +298,11 @@ while episode_count < episodes:
     dist = (snake_x - food_x)*(snake_x - food_x) + (snake_y - food_y)*(snake_y - food_y)
 
     # Pontuação e número de episódios
-    score = 0
+    score = 1
     episode_count += 1
 
     # Estados e pontuação da IA
-    ia_R = 0
+    ia_R = []
     ia_G = 0
 
     #Estados de um episódio
@@ -318,6 +319,15 @@ while episode_count < episodes:
                 game_over = True
                 break
             
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_MINUS:
+                    if(snake_speed >= 10):
+                        snake_speed -= 10
+                
+                if event.key == pygame.K_KP_PLUS:
+                    snake_speed += 10
+
+            
 
         # Estado atual
         ia_S = make_state()
@@ -325,13 +335,13 @@ while episode_count < episodes:
         ia_A = choose_action(ia_S)
 
         # Se tem energia suficiente, usa o monte carlo, senão sorteia uma ação aleatória. Objetivo : Evitar loops infinitos.
-        if (fuel > 0):
-            vector_action = get_action_vector(ia_A)
-        else:
-            vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
-            while [(-1)*snake_x_change, (-1)*snake_y_change] == vector_action:
-                vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
-            fuel = 900
+        #if (fuel > 0):
+        vector_action = get_action_vector(ia_A)
+        #else:
+        #    vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
+        #    while [(-1)*snake_x_change, (-1)*snake_y_change] == vector_action:
+        #        vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
+        #    fuel = 900
 
         snake_x_change = vector_action[0]
         snake_y_change = vector_action[1]
@@ -341,22 +351,23 @@ while episode_count < episodes:
         snake_x = snake_x + snake_x_change
         snake_y = snake_y + snake_y_change
 
-        # ia_R = -1 (Ou usa isso, o a analise de distancias da cobrinha até a comida.)
+        ia_R.append(-0.01) # (Ou usa isso, o a analise de distancias da cobrinha até a comida.)
 
         # A cada movimento perde 1 de energia. 900 é o numero de quadrados disponivies na tela.
         fuel -= 1
 
         #Punições de acordo com a distancia da cobrinha a comida
-        dist_atual = (snake_x - food_x)*(snake_x - food_x) + (snake_y - food_y)*(snake_y - food_y)
-        ia_R = (dist - dist_atual)*0.001
+        #dist_atual = (snake_x - food_x)*(snake_x - food_x) + (snake_y - food_y)*(snake_y - food_y)
+        #ia_R.append((dist - dist_atual)*0.0001)
         
 
         # Terminar o jogo quando a cobrinha encosta nas bordas.
         if snake_x >= game_screen_width or snake_x < 0 or snake_y >= game_screen_weight or snake_y < 0 :
             game_over = True
-            show_text("Episodio: " + str(episode_count), [0,0,0])
-            time.sleep(0.3)
-            ia_R = -900
+            #show_text("Episodio: " + str(episode_count), [0,0,0])
+            time.sleep(0)
+            #del ia_R[-1]
+            ia_R.append(-10)
         
 
         # Sortear nova posição da comida quando a cobrinha come
@@ -365,7 +376,12 @@ while episode_count < episodes:
             food_x, food_y = random.choice(posicoes_disponiveis)
             
             length_of_snake += 1
-            ia_R = fuel  # A IA recebe como recompensa por comer a energia restante. Logo, quanto menos ela demorar para comer,
+            score += 1
+            if score > max_score:
+                max_score = score
+
+            #del ia_R[-1]
+            ia_R.append(10)  # A IA recebe como recompensa por comer a energia restante. Logo, quanto menos ela demorar para comer,
             fuel = 900   # mais pontos ela ganha. Ao comer a energia volta para 900.
             passos = 0
 
@@ -384,9 +400,10 @@ while episode_count < episodes:
         for x in snake_list[:-1]:
             if x == snake_head:
                 game_over = True
-                show_text("Episodio: " + str(episode_count), [0,0,0])
-                time.sleep(0.3)
-                ia_R = -900
+                #show_text("Episodio: " + str(episode_count), [0,0,0])
+                time.sleep(0)
+                #del ia_R[-1]
+                ia_R.append(-10)
         
         if len_snake > length_of_snake:
             del snake_list[0]
@@ -394,35 +411,47 @@ while episode_count < episodes:
 
         n_acoes_episodio += 1
         passos += 1
-        if passos == 10000:
+        if passos == 3000:
             game_over = True
+            ia_R.append(-10)
 
-        # Soma das recompensas
-        ia_G = ia_G*gamma + ia_R
 
         # Limpar a tela antes de colocar na tela a nova posição da cobrinha e da comida.
-        game_screen.fill([158, 206, 225])
-        for x in snake_list:
-            pygame.draw.rect(game_screen, blue, [x[0], x[1], snake_block, snake_block])
+        #game_screen.fill([158, 206, 225])
+        #for x in snake_list:
+         #   pygame.draw.rect(game_screen, blue, [x[0], x[1], snake_block, snake_block])
 
-        pygame.draw.rect(game_screen, red, [food_x, food_y, food_heigth, food_width])
+        #pygame.draw.rect(game_screen, red, [food_x, food_y, food_heigth, food_width])
 
 
         # Pontuações
-        value = font_style.render("Score: " + str(length_of_snake), True, [255,255,255])
-        game_screen.blit(value, [0, 0])
+        #value = font_style.render("Score: " + str(score), True, [255,255,255])
+        #game_screen.blit(value, [0, 0])
+        #value = font_style.render("Best Score: " + str(max_score), True, [255,255,255])
+        #game_screen.blit(value, [150, 0])
+        #value = font_style.render("Ep: " + str(episode_count), True, [255,255,255])
+        #game_screen.blit(value, [400, 0])
 
 
         states_and_actions_visited.append((ia_S, ia_A))
-        dist = dist_atual
+        #dist = dist_atual
 
         # Atualizar o display e congelar brevemente o tempo
-        pygame.display.update()
+        #pygame.display.update()
         clock.tick(snake_speed)
     #--------------------------------------------------------------------------#
 
 
     #---------------------Aprender/ Atualizar o ia_Q---------------------------#
+    print("Episode : " + str(episode_count) + "  Score :" + str(score) + "  Best Score :" + str(max_score))
+    # Soma das recompensas
+    # Soma das recompensas
+    #for r in ia_R[::-1]:
+    #    ia_G = ia_G*0.99 + r
+
+    for index, r in enumerate(ia_R[::-1]):
+        ia_G += r*pow(1.01, index)
+    
     for s, a in states_and_actions_visited:
         if s in ia_Q.keys():
             ia_N_S[s] += 1
