@@ -43,9 +43,11 @@ class Food:
         self.paint()
 
     def _erase(self):
-        pygame.draw.rect(self.screen, self.game.swallow_color,
-                         [self.position.x, self.position.y, self.game.block_size, self.game.block_size])
+        if self.game.show_game:
+            pygame.draw.rect(self.screen, self.game.swallow_color,
+                             [self.position.x, self.position.y, self.game.block_size, self.game.block_size])
 
     def paint(self):
-        pygame.draw.rect(self.screen, self.game.food_color,
-                         [self.position.x, self.position.y, self.game.block_size, self.game.block_size])
+        if self.game.show_game:
+            pygame.draw.rect(self.screen, self.game.food_color,
+                             [self.position.x, self.position.y, self.game.block_size, self.game.block_size])

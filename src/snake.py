@@ -99,16 +99,19 @@ class Snake:
         self.paint()
 
     def _paint_block(self, coord: Coord):
-        pygame.draw.rect(self.screen, self.game_config.snake_color,
-                         [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
+        if self.game_config.show_game:
+            pygame.draw.rect(self.screen, self.game_config.snake_color,
+                             [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
     def _erase_block(self, coord: Coord):
-        pygame.draw.rect(self.screen, self.game_config.background_color,
-                         [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
+        if self.game_config.show_game:
+            pygame.draw.rect(self.screen, self.game_config.background_color,
+                             [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
     def _paint_head(self, coord: Coord):
-        pygame.draw.rect(self.screen, self.game_config.head_color,
-                         [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
+        if self.game_config.show_game:
+            pygame.draw.rect(self.screen, self.game_config.head_color,
+                             [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
     def paint(self):
         for x in self._body:

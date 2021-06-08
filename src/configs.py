@@ -24,6 +24,7 @@ class GameConfig:
     punishment: int
     show_game: bool
     speed_delta: int
+    run_for_n_minutes: int
 
 
 @dataclass()

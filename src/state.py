@@ -102,6 +102,11 @@ class State:
             # self._body_below,
             # going_to_food,
             # danger_ahead,
+            self._going_left,
+            self._going_right,
+            self._going_down,
+            self._going_up,
+
             self._danger_left,
             self._danger_right,
             self._danger_down,

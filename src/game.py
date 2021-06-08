@@ -94,6 +94,9 @@ class SnakeGame:
         self.font_style = pygame.font.SysFont([], game_config.font_size)
         self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
 
+        if not self.game_config.run_for_n_minutes == 0:
+            self.game_config.number_of_episodes = self.game_config.run_for_n_minutes * 60 * 277  # 277 is a raw estimate
+
     def update_display(self):
         if self.game_config.show_game:
             pygame.display.update()
@@ -187,6 +190,9 @@ class SnakeGame:
                         else:
                             self.snake.config.speed -= self.game_config.speed_delta
                     print(f"Current speed is {self.snake.config.speed}")
+
+                elif event.key == pygame.K_s:
+                    self.game_config.show_game = not self.game_config.show_game
 
                 elif event.key == pygame.K_p:
                     # toggle pause

@@ -27,15 +27,16 @@ def run():
         swallow_color=Colors.SWALLOW_GREEN.value,
         head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=40000,
+        number_of_episodes=100000,
         block_interactions=False,
         missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
-        default_reward=1,
+        default_reward=0.1,
         food_reward=10,
         punishment=-10,
-        show_game=True,
-        speed_delta=10
+        show_game=False,
+        speed_delta=10,
+        run_for_n_minutes=20
     )
 
     _snake_config = SnakeConfig(
@@ -44,9 +45,13 @@ def run():
     )
 
     _agent = MonteCarloAgent(
-        every_visit=True,
+        every_visit=False,
         gamma=0.2,
-        epsilon_step_increment=1
+        epsilon_step_increment=1,
+        initial_epsilon=1,
+        use_individual_policies=True,
+        learning_incentive=True,
+        reverse_history=True
     )
 
     _game = SnakeGame(
@@ -58,10 +63,13 @@ def run():
     start = time()
     # Run the game
     result = _game.loop()
-    if isinstance(result, dict):
-        dump_results_to_file(result)
     end = time()
-    print(f"\nElapsed time: {math.floor(end - start)} seconds")
+
+    _time = math.floor(end-start)
+    if isinstance(result, dict):
+        result["header"]["statistics"]["seconds"] = _time
+        dump_results_to_file(result)
+    print(f"\nElapsed time: {_time} seconds")
 
 
 if __name__ == '__main__':
