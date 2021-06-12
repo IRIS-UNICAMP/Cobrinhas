@@ -251,7 +251,7 @@ class SnakeGame:
         while self.current_episode < self.game_config.number_of_episodes:
             # Repaint the whole screen
             self.screen.fill(self.game_config.background_color)
-            self.snake = Snake(self.game_config, self.screen, self.snake_config)
+            self.snake = Snake(self.game_config, self.screen, self.snake_config, list(self.screen_coords_list))
             self.food = Food(self.game_config, self.screen, self.available_positions)
             self.update_display()
 

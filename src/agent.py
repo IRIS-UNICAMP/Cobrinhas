@@ -128,6 +128,7 @@ class MonteCarloAgent:
         # Initializing specific state dict
         if state not in self._state_action_value.keys():
             self._state_action_value[state] = {
+                "counter": 0,
                 Action.UP.value: StateActionInfo(Action.UP),
                 Action.DOWN.value: StateActionInfo(Action.DOWN),
                 Action.LEFT.value: StateActionInfo(Action.LEFT),
@@ -149,7 +150,7 @@ class MonteCarloAgent:
                 }
 
     def _reinforce_state_action(self, record: HistoryRecord, factor: float):
-        # Increment Counter (N)
+        # Increment Counter (N(s,a))
         self._state_action_value[record.state][record.action.value].counter += 1
 
         # Reinforce (Q(s,a))
@@ -166,6 +167,7 @@ class MonteCarloAgent:
 
     def choose_action(self, state) -> Action:
         self.init_state_if_needed(state)
+        self._state_action_value[state]["counter"] += 1
         policy: Policy
         if self._use_individual_policies:
             policy = self._state_action_value[state]["policy"]
@@ -223,10 +225,13 @@ class MonteCarloAgent:
                     update_epsilon = True
 
                 if update_epsilon:
-                    epsilon_value = self._state_action_value[record.state]["policy"].epsilon
+                    state_count = self._state_action_value[record.state]["counter"]
+                    # epsilon_value = self._state_action_value[record.state]["policy"].epsilon
                     epsilon_step = self._state_action_value[record.state]["policy"].epsilon_step
                     self._last_reinforcement_factor = factor
-                    self._state_action_value[record.state]["policy"].epsilon = 1 / ((1 / epsilon_value) + epsilon_step)
+                    # self._state_action_value[record.state]["policy"].epsilon =
+                    # 1 / ((1 / epsilon_value) + epsilon_step)
+                    self._state_action_value[record.state]["policy"].epsilon = 1 / (state_count + epsilon_step)
 
             self._reinforce_state_action(record, factor)
 

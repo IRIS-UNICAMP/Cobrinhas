@@ -17,8 +17,8 @@ def dump_results_to_file(result):
 
 def run():
     _game_config = GameConfig(
-        screen_height=440,
-        screen_width=440,
+        screen_height=400,
+        screen_width=400,
         snake_color=Colors.RED.value,
         background_color=Colors.BLUE.value,
         food_color=Colors.RED.value,
@@ -31,27 +31,28 @@ def run():
         block_interactions=False,
         missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
-        default_reward=0.1,
+        default_reward=0.01,
         food_reward=10,
         punishment=-10,
-        show_game=False,
+        show_game=True,
         speed_delta=10,
-        run_for_n_minutes=20
+        run_for_n_minutes=40
     )
 
     _snake_config = SnakeConfig(
         speed=0,
+        random_initial_pos=True,
         initial_length=1
     )
 
     _agent = MonteCarloAgent(
         every_visit=False,
-        gamma=0.2,
+        gamma=1.01,
         epsilon_step_increment=1,
         initial_epsilon=1,
         use_individual_policies=True,
-        learning_incentive=True,
-        reverse_history=True
+        learning_incentive=False,
+        reverse_history=False
     )
 
     _game = SnakeGame(

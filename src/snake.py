@@ -1,5 +1,6 @@
 from dataclasses import field
 from typing import List
+import random
 
 import pygame
 from pygame import Surface
@@ -13,10 +14,11 @@ class Snake:
     _velocity: Velocity = field(default=None)
     _body: List[Coord] = field(default_factory=set)
 
-    def __init__(self, game_config: GameConfig, screen: Surface, config: SnakeConfig):
+    def __init__(self, game_config: GameConfig, screen: Surface, config: SnakeConfig, available_positions: List[Coord]):
         self.game_config = game_config
         self.screen = screen
         self.config = config
+        self.available_positions = available_positions
 
         self._initialize_body()
 
@@ -91,10 +93,13 @@ class Snake:
         self._velocity = Direction(self.game_config.block_size).right
 
     def _initialize_body(self):
-        # Creating a linearized version of the screen of the size of the snake
-        linearized_vector = self._snaky_linearized_screen(max_length=self.config.initial_length)
-        linearized_vector.reverse()
-        self._body = linearized_vector
+        if self.config.random_initial_pos:
+            self._body = [random.choice(self.available_positions)]
+        else:
+            # Creating a linearized version of the screen of the size of the snake
+            linearized_vector = self._snaky_linearized_screen(max_length=self.config.initial_length)
+            linearized_vector.reverse()
+            self._body = linearized_vector
         self._set_default_velocity()
         self.paint()
 

@@ -30,4 +30,5 @@ class GameConfig:
 @dataclass()
 class SnakeConfig:
     speed: int
+    random_initial_pos: bool
     initial_length: int = field(default=1)
