@@ -25,6 +25,8 @@ class GameConfig:
     show_game: bool
     speed_delta: int
     run_for_n_minutes: int
+    change_agent_episode: int
+    body_hit_punishment: int
 
 
 @dataclass()

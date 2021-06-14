@@ -67,6 +67,7 @@ class ActionTakerPolicy(IntEnum):
     HUMAN = 0
     AI_AGENT = 1
     MIXED = 2
+    MIXED_FOOD_AI = 3
 
 
 Color = Tuple[int, int, int]

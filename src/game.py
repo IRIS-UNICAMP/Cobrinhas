@@ -35,6 +35,65 @@ def velocity_interpreter(event, block_size: int, current_velocity: Velocity) -> 
     return current_velocity
 
 
+def food_based_action(food: Food, snake: Snake, state: State) -> Action:
+    def food_choice() -> Set[Action]:
+        choices = set()
+        if state.food_right.value:
+            choices.add(Action.RIGHT)
+        if state.food_left.value:
+            choices.add(Action.LEFT)
+        if state.food_below.value:
+            choices.add(Action.DOWN)
+        if state.food_above.value:
+            choices.add(Action.UP)
+        return choices
+
+    def danger_choice() -> Set[Action]:
+        choices = set()
+        if not state.danger_up.value:
+            choices.add(Action.UP)
+        if not state.danger_down.value:
+            choices.add(Action.DOWN)
+        if not state.danger_left.value:
+            choices.add(Action.LEFT)
+        if not state.danger_right.value:
+            choices.add(Action.RIGHT)
+        return choices
+
+    def not_opposite_speed_choice() -> Set[Action]:
+        choices = set()
+        if not state.going_left.value:
+            choices.add(Action.RIGHT)
+        if not state.going_right.value:
+            choices.add(Action.LEFT)
+        if not state.going_up.value:
+            choices.add(Action.DOWN)
+        if not state.going_down.value:
+            choices.add(Action.UP)
+        return choices
+
+    not_opposite_speed_choices = not_opposite_speed_choice()
+    food_actions = food_choice()
+    no_danger_actions = danger_choice()
+    common = [*food_actions.intersection(no_danger_actions).intersection(not_opposite_speed_choices)]
+    # printable_common = [e.value for e in common]
+    # printable_not_op = [e.value for e in not_opposite_speed_choices]
+    # printable_food = [e.value for e in food_actions]
+    # printable_danger = [e.value for e in no_danger_actions]
+    #
+    # print(f"common: {printable_common}")
+    # print(f"not op: {printable_not_op}")
+    # print(f"food: {printable_food}")
+    # print(f"no danger: {printable_danger}\n\n\n")
+
+    if len(common) > 0:
+        return random.choice(common)
+    elif len(no_danger_actions) > 0:
+        return random.choice([*no_danger_actions.intersection(not_opposite_speed_choices)])
+    else:
+        return random.choice([*not_opposite_speed_choices])
+
+
 def put_random_dir(queue):
     rand_key = random.choice([pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN])
     new_event = pygame.event.Event(pygame.KEYDOWN, unicode='', key=rand_key, mod=pygame.KMOD_NONE)
@@ -79,6 +138,7 @@ class SnakeGame:
     died_body_hit_counter = 0
 
     human_turn: bool = False
+    food_ai_turn: bool = False
 
     def __init__(self,
                  snake_config: SnakeConfig,
@@ -93,6 +153,9 @@ class SnakeGame:
         self.screen = pygame.display.set_mode((game_config.screen_height, game_config.screen_height))
         self.font_style = pygame.font.SysFont([], game_config.font_size)
         self.pause_font_style = pygame.font.SysFont([], game_config.font_size, True, True)
+
+        if game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
+            self.food_ai_turn = True
 
         if not self.game_config.run_for_n_minutes == 0:
             self.game_config.number_of_episodes = self.game_config.run_for_n_minutes * 60 * 277  # 277 is a raw estimate
@@ -263,6 +326,7 @@ class SnakeGame:
                 # Running an episode
                 missed_food_times = 0
                 while True:
+                    # print(f"snake ({self.snake.head.x}, {self.snake.head.y})")
                     # Here we define the state and take the best action
                     self.state.populate(self.snake, self.food.position, self.game_config).set_state()
                     # print(self.state)
@@ -272,7 +336,10 @@ class SnakeGame:
                     # and putting the keypress event in the queue
                     if not self.human_turn:
                         self.game_config.block_interactions = True
-                        action = self.agent.choose_action(self.state.value)
+                        if self.food_ai_turn:
+                            action = food_based_action(self.food, self.snake, self.state)
+                        else:
+                            action = self.agent.choose_action(self.state.value)
                         put_keypress_event(pygame.event, action)
                     else:
                         self.game_config.block_interactions = False
@@ -310,10 +377,13 @@ class SnakeGame:
                 print(e)
                 if isinstance(e, WallHit):
                     self.died_wall_hit_counter += 1
+                    self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
                 elif isinstance(e, BodyHit):
                     self.died_body_hit_counter += 1
+                    self.agent.save_to_history(self.state.value, action, self.game_config.body_hit_punishment)
 
-                self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
+                # pygame.time.wait(10000)
+
             except TooDumb as e:
                 print('\n\n')
                 print(e)
@@ -327,6 +397,9 @@ class SnakeGame:
                 self.human_turn = False
             elif self.game_config.action_taker_policy == ActionTakerPolicy.HUMAN:
                 self.human_turn = True
+            elif self.game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
+                if self.current_episode > self.game_config.change_agent_episode:
+                    self.food_ai_turn = False
             else:
                 self.human_turn = not self.human_turn
                 self.paused = True
@@ -339,7 +412,7 @@ class SnakeGame:
                   f"There are {self.agent.state_amount} states registered.\n"
                   f"The snake was lost {self.too_dumb_counter} times.\n"
                   f"The snake died from wall hit {self.died_wall_hit_counter} times.\n"
-                  f"The snake died from body hit {self.died_body_hit_counter} times.\n",)
+                  f"The snake died from body hit {self.died_body_hit_counter} times.\n", )
             self.agent.episode_reinforcement()
             if int(self.food.score) > self.best_score:
                 self.best_score = int(self.food.score)
@@ -350,4 +423,3 @@ class SnakeGame:
               f"Best score was {self.best_score}\n"
               f"Epsilon was {self.agent.policy.epsilon}")
         return self.build_dump_object_info()
-

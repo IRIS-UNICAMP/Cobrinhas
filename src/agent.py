@@ -124,7 +124,7 @@ class MonteCarloAgent:
             )
         )
 
-    def init_state_if_needed(self, state: str):
+    def init_state_if_needed(self, state: str) -> bool:
         # Initializing specific state dict
         if state not in self._state_action_value.keys():
             self._state_action_value[state] = {
@@ -148,6 +148,8 @@ class MonteCarloAgent:
                     **self._state_action_value[state],
                     "has_been_visited": False,
                 }
+            return False
+        return True
 
     def _reinforce_state_action(self, record: HistoryRecord, factor: float):
         # Increment Counter (N(s,a))
@@ -209,6 +211,10 @@ class MonteCarloAgent:
         factor = self._calculate_reinforcement_factor()
 
         for step, record in enumerate(self._history):
+            state_exists = self.init_state_if_needed(record.state)
+            if not state_exists:
+                self._state_action_value[record.state]["counter"] += 1
+                self._chosen_policy = self._state_action_value[record.state]["policy"]
             if not self._every_visit and self._state_action_value[record.state]["has_been_visited"]:
                 continue
 
