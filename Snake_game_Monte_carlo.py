@@ -227,7 +227,7 @@ def get_action_vector(action):
 
 def choose_action(ia_S):
 
-    epsilon = 1/(1 + ia_N_S.get(ia_S, 0))  ## Aumentar a cte 1 para testes
+    epsilon = 40/(40 + ia_N_S.get(ia_S, 0))  ## Aumentar a cte 1 para testes
     
     value = random.random()
     if value <= epsilon:
@@ -263,13 +263,115 @@ def choose_action(ia_S):
         return best_a
 
 
+tentar_vertical = [0]
+def IA_burra(snake_x_change, snake_y_change):
+    
+
+    # Comida a direita
+    if snake_x - food_x < 0:
+        if (snake_x + snake_block, snake_y) not in snake_list:
+            snake_x_change = snake_block
+            snake_y_change = 0
+
+        else:
+            if (snake_y > 350):
+                if (snake_x, snake_y - snake_block) not in snake_list:
+                    snake_y_change = -snake_block
+                else:
+                    snake_y_change = snake_block
+            else:
+                if (snake_x, snake_y + snake_block) not in snake_list:
+                    snake_y_change = snake_block
+                else:
+                    snake_y_change = -snake_block
+            snake_x_change = 0
+        
+
+    # Comida a esquerda
+    elif snake_x - food_x > 0:
+        if (snake_x - snake_block, snake_y) not in snake_list:
+            snake_x_change = -snake_block
+            snake_y_change = 0
+
+        else:
+            if (snake_y > 350):
+                if (snake_x, snake_y - snake_block) not in snake_list:
+                    snake_y_change = -snake_block
+                else:
+                    snake_y_change = snake_block
+            else:
+                if (snake_x, snake_y + snake_block) not in snake_list:
+                    snake_y_change = snake_block
+                else:
+                    snake_y_change = -snake_block
+            snake_x_change = 0
+                
+    
+
+    elif (snake_x == food_x):
+
+        # Comida abaixo
+        if snake_y - food_y < 0:
+            if (snake_x, snake_y + snake_block) not in snake_list:
+                tentar_vertical[0] = 0
+                snake_y_change = snake_block
+                snake_x_change = 0
+            else:
+                tentar_vertical[0] += 1
+                if (snake_x < 350):
+                    if (snake_x + snake_block, snake_y) not in snake_list:
+                        snake_x_change = snake_block
+                    else:
+                        snake_x_change = -snake_block
+                else:
+                    if (snake_x - snake_block, snake_y) not in snake_list:
+                        snake_x_change = -snake_block
+                    else:
+                        snake_x_change = snake_block
+                snake_y_change = 0
+
+        # Comida acima
+        if snake_y - food_y > 0:
+            if (snake_x, snake_y - snake_block) not in snake_list:
+                tentar_vertical[0] = 0
+                snake_y_change = -snake_block
+                snake_x_change = 0
+            else:
+                tentar_vertical[0] += 1
+                if (snake_x < 350):
+                    if (snake_x + snake_block, snake_y) not in snake_list:
+                        snake_x_change = snake_block
+                    else:
+                        snake_x_change = -snake_block
+                else:
+                    if (snake_x - snake_block, snake_y) not in snake_list:
+                            snake_x_change = -snake_block
+                    else:
+                        snake_x_change = snake_block
+                snake_y_change = 0
+    
+    return (snake_x_change, snake_y_change)
 
 
+def get_vector_action(snake_vector):
+    if snake_vector == [-snake_block, 0]:
+        return "LEFT"
+    
+    elif snake_vector == [snake_block, 0]:
+        return "RIGHT"
+
+    elif snake_vector == [0, +snake_block]:
+        return "DOWN"
+    
+    elif snake_vector == [0, -snake_block]:
+        return "UP"
 
 #----------------------Repetição do jogo em vários episódios para treinar a IA---------------------#
 
+Bot_Jogando = True
+show_image = False
 episode_count = 0
-episodes = 200000
+episodes = 10000000
 ia_Q = {}
 ia_N_S_A = {}
 ia_N_S = {}
@@ -287,7 +389,7 @@ while episode_count < episodes:
     snake_x, snake_y = random.choice(list(posicoes_tela))
     snake_list.append((snake_x, snake_y))
     length_of_snake = 1
-    fuel = 900
+    fuel = 10
     passos = 0
     
 
@@ -326,48 +428,69 @@ while episode_count < episodes:
                 
                 if event.key == pygame.K_KP_PLUS:
                     snake_speed += 10
+                
+                if event.key == pygame.K_s:
+                    show_image = True
 
-            
+                if event.key == pygame.K_f:
+                    show_image = False
+                
+                if event.key == pygame.K_b:
+                    Bot_Jogando = True
+                
+                if event.key == pygame.K_i:
+                    Bot_Jogando = False
 
-        # Estado atual
+
         ia_S = make_state()
-        # Ação escolhida pelo Monte carlo para aquele estado
-        ia_A = choose_action(ia_S)
+        ia_A = ""
+        if (Bot_Jogando):
+            snake_x_change, snake_y_change = IA_burra(snake_x_change, snake_y_change)
+            ia_A = get_vector_action([snake_x_change, snake_y_change])
 
-        # Se tem energia suficiente, usa o monte carlo, senão sorteia uma ação aleatória. Objetivo : Evitar loops infinitos.
-        #if (fuel > 0):
-        vector_action = get_action_vector(ia_A)
-        #else:
-        #    vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
-        #    while [(-1)*snake_x_change, (-1)*snake_y_change] == vector_action:
-        #        vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
-        #    fuel = 900
 
-        snake_x_change = vector_action[0]
-        snake_y_change = vector_action[1]
+        else:
+            # Estado atual
+            #ia_S = make_state()
+            # Ação escolhida pelo Monte carlo para aquele estado
+            ia_A = choose_action(ia_S)
+
+            # Se tem energia suficiente, usa o monte carlo, senão sorteia uma ação aleatória. Objetivo : Evitar loops infinitos.
+            if (fuel > 0):
+                vector_action = get_action_vector(ia_A)
+            else:
+                vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
+                while [(-1)*snake_x_change, (-1)*snake_y_change] == vector_action:
+                    vector_action = get_action_vector(random.choice(["UP", "DOWN", "RIGHT", "LEFT"]))
+                fuel = 10
+
+            snake_x_change = vector_action[0]
+            snake_y_change = vector_action[1]
+        
 
 
         # Atualizar posição da cobrinha
         snake_x = snake_x + snake_x_change
         snake_y = snake_y + snake_y_change
 
-        ia_R.append(-0.01) # (Ou usa isso, o a analise de distancias da cobrinha até a comida.)
+        #ia_R.append(0.01) # (Ou usa isso, o a analise de distancias da cobrinha até a comida.)
 
         # A cada movimento perde 1 de energia. 900 é o numero de quadrados disponivies na tela.
-        fuel -= 1
+        fuel -= 0.0111
 
         #Punições de acordo com a distancia da cobrinha a comida
-        #dist_atual = (snake_x - food_x)*(snake_x - food_x) + (snake_y - food_y)*(snake_y - food_y)
-        #ia_R.append((dist - dist_atual)*0.0001)
+        dist_atual = (snake_x - food_x)*(snake_x - food_x) + (snake_y - food_y)*(snake_y - food_y)
+        ia_R.append((dist - dist_atual)*0.00001)
         
 
         # Terminar o jogo quando a cobrinha encosta nas bordas.
         if snake_x >= game_screen_width or snake_x < 0 or snake_y >= game_screen_weight or snake_y < 0 :
             game_over = True
-            #show_text("Episodio: " + str(episode_count), [0,0,0])
+            if show_image:
+                show_text("Episodio: " + str(episode_count), [0,0,0])
             time.sleep(0)
             #del ia_R[-1]
-            ia_R.append(-10)
+            ia_R.append(-20)
         
 
         # Sortear nova posição da comida quando a cobrinha come
@@ -382,7 +505,7 @@ while episode_count < episodes:
 
             #del ia_R[-1]
             ia_R.append(10)  # A IA recebe como recompensa por comer a energia restante. Logo, quanto menos ela demorar para comer,
-            fuel = 900   # mais pontos ela ganha. Ao comer a energia volta para 900.
+            fuel = 10   # mais pontos ela ganha. Ao comer a energia volta para 900.
             passos = 0
 
         
@@ -400,10 +523,11 @@ while episode_count < episodes:
         for x in snake_list[:-1]:
             if x == snake_head:
                 game_over = True
-                #show_text("Episodio: " + str(episode_count), [0,0,0])
+                if show_image:
+                    show_text("Episodio: " + str(episode_count), [0,0,0])
                 time.sleep(0)
                 #del ia_R[-1]
-                ia_R.append(-10)
+                ia_R.append(-20)
         
         if len_snake > length_of_snake:
             del snake_list[0]
@@ -411,33 +535,35 @@ while episode_count < episodes:
 
         n_acoes_episodio += 1
         passos += 1
-        if passos == 3000:
+        if passos == 1000:
             game_over = True
-            ia_R.append(-10)
+            ia_R.append(-30)
 
 
-        # Limpar a tela antes de colocar na tela a nova posição da cobrinha e da comida.
-        #game_screen.fill([158, 206, 225])
-        #for x in snake_list:
-         #   pygame.draw.rect(game_screen, blue, [x[0], x[1], snake_block, snake_block])
+        if show_image:
+            # Limpar a tela antes de colocar na tela a nova posição da cobrinha e da comida.
+            game_screen.fill([158, 206, 225])
+            for x in snake_list:
+                pygame.draw.rect(game_screen, blue, [x[0], x[1], snake_block, snake_block])
 
-        #pygame.draw.rect(game_screen, red, [food_x, food_y, food_heigth, food_width])
+            pygame.draw.rect(game_screen, red, [food_x, food_y, food_heigth, food_width])
 
 
-        # Pontuações
-        #value = font_style.render("Score: " + str(score), True, [255,255,255])
-        #game_screen.blit(value, [0, 0])
-        #value = font_style.render("Best Score: " + str(max_score), True, [255,255,255])
-        #game_screen.blit(value, [150, 0])
-        #value = font_style.render("Ep: " + str(episode_count), True, [255,255,255])
-        #game_screen.blit(value, [400, 0])
+            # Pontuações
+            value = font_style.render("Score: " + str(score), True, [255,255,255])
+            game_screen.blit(value, [0, 0])
+            value = font_style.render("Best Score: " + str(max_score), True, [255,255,255])
+            game_screen.blit(value, [150, 0])
+            value = font_style.render("Ep: " + str(episode_count), True, [255,255,255])
+            game_screen.blit(value, [400, 0])
+
+            pygame.display.update()
 
 
         states_and_actions_visited.append((ia_S, ia_A))
-        #dist = dist_atual
+        dist = dist_atual
 
         # Atualizar o display e congelar brevemente o tempo
-        #pygame.display.update()
         clock.tick(snake_speed)
     #--------------------------------------------------------------------------#
 
@@ -446,11 +572,11 @@ while episode_count < episodes:
     print("Episode : " + str(episode_count) + "  Score :" + str(score) + "  Best Score :" + str(max_score))
     # Soma das recompensas
     # Soma das recompensas
-    #for r in ia_R[::-1]:
-    #    ia_G = ia_G*0.99 + r
+    for r in ia_R:
+        ia_G = ia_G*1.01 + r
 
-    for index, r in enumerate(ia_R[::-1]):
-        ia_G += r*pow(1.01, index)
+    #for index, r in enumerate(ia_R):
+    #    ia_G += r*pow(0.99, index)
     
     for s, a in states_and_actions_visited:
         if s in ia_Q.keys():
