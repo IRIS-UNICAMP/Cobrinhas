@@ -6,7 +6,7 @@ from pygame.time import Clock
 
 from typing import Set
 
-from src.agent import MonteCarloAgent
+from src.agents.monte_carlo import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.exceptions import SnakeGameException, QuitGame, TooDumb, WallHit, BodyHit
 from src.food import Food

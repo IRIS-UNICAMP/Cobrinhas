@@ -1,4 +1,4 @@
-from src.agent import MonteCarloAgent
+from src.agents.monte_carlo import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.game import SnakeGame
 from src.shared import Colors, ActionTakerPolicy
@@ -17,8 +17,8 @@ def dump_results_to_file(result):
 
 def run():
     _game_config = GameConfig(
-        screen_height=450,
-        screen_width=450,
+        screen_height=600,
+        screen_width=600,
         snake_color=Colors.RED.value,
         background_color=Colors.BLUE.value,
         food_color=Colors.RED.value,
@@ -37,7 +37,7 @@ def run():
         show_game=False,
         speed_delta=10,
         run_for_n_minutes=40,
-        change_agent_episode=1500,
+        change_agent_episode=500,
         body_hit_punishment=-20
     )
 

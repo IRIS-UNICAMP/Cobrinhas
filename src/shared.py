@@ -72,3 +72,39 @@ class ActionTakerPolicy(IntEnum):
 
 Color = Tuple[int, int, int]
 
+
+@dataclass()
+class HistoryRecord:
+    state: str
+    reward: float
+    action: Action
+
+
+class Policy:
+    epsilon: float = 1
+    epsilon_step: float = 0.1
+
+    # desc_action_index: int = 0  # gets the n-th best action
+    # alternative_action_pick_slice: float = 1/3  # uses the above 1/3 of the time
+
+    def to_json(self):
+        return {
+            "epsilon": self.epsilon,
+            "epsilon_step": self.epsilon_step,
+        }
+
+
+class StateActionInfo:
+    counter: int = 0  # N
+    value: float = 0  # Q(s,a)
+    action: Action
+    policy: Policy = Policy()
+
+    def __init__(self, action: Action):
+        self.action = action
+
+    def to_json(self):
+        return {
+            "counter": self.counter,
+            "value": self.value,
+        }
