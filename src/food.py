@@ -44,10 +44,14 @@ class Food:
 
     def _erase(self):
         if self.game.show_game:
-            pygame.draw.rect(self.screen, self.game.swallow_color,
-                             [self.position.x, self.position.y, self.game.block_size, self.game.block_size])
+            half_block_size = self.game.block_size // 2
+            pygame.draw.circle(self.screen, self.game.swallow_color,
+                               [self.position.x + half_block_size, self.position.y + half_block_size],
+                               half_block_size)
 
     def paint(self):
         if self.game.show_game:
-            pygame.draw.rect(self.screen, self.game.food_color,
-                             [self.position.x, self.position.y, self.game.block_size, self.game.block_size])
+            half_block_size = self.game.block_size // 2
+            pygame.draw.circle(self.screen, self.game.food_color,
+                               [self.position.x + half_block_size, self.position.y + half_block_size],
+                               half_block_size)
