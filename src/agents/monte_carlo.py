@@ -1,7 +1,8 @@
 import random
-from dataclasses import dataclass
+from abc import ABC
 from typing import List, Dict
 
+from src.agents.abstract_agent import AbstractAgent
 from src.shared import Action, HistoryRecord, Policy, StateActionInfo
 
 from json import JSONEncoder
@@ -17,7 +18,12 @@ _default.default = JSONEncoder().default
 JSONEncoder.default = _default
 
 
-class MonteCarloAgent:
+class MonteCarloAgent(AbstractAgent):
+    
+    # unneeded methods
+    def step_reinforcement(self):
+        pass
+
     _history: List[HistoryRecord] = list()
     _state_action_value: Dict = {}
     _episode_counter = 1

@@ -410,14 +410,16 @@ class SnakeGame:
                 self.toggle_pause_text()
 
             # End of episode!!
-            print(f"Reinforcing episode {self.current_episode}/{self.game_config.number_of_episodes}. "
+            print(f"Episode {self.current_episode}/{self.game_config.number_of_episodes}. "
                   f"Score was {self.food.score}. Best score is {self.best_score} made in episode "
                   f"{self.best_score_episode}.\n"
                   f"There are {self.agent.state_amount} states registered.\n"
                   f"The snake was lost {self.too_dumb_counter} times.\n"
                   f"The snake died from wall hit {self.died_wall_hit_counter} times.\n"
                   f"The snake died from body hit {self.died_body_hit_counter} times.\n", )
+
             self.agent.episode_reinforcement()
+
             has_best_score = int(self.food.score) > self.best_score
             if has_best_score:
                 self.best_score = int(self.food.score)
@@ -429,7 +431,6 @@ class SnakeGame:
 
         # End of experiment!!
         print(f"End of experiment.\n"
-              f"Best score was {self.best_score}\n"
-              f"Epsilon was {self.agent.policy.epsilon}")
+              f"Best score was {self.best_score}\n")
 
         return self.build_dump_object_info(), self._scores_episode, self._scores
