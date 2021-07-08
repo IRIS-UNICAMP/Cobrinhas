@@ -17,20 +17,20 @@ from src.state import State
 pygame.init()
 
 
-def velocity_interpreter(event, block_size: int, current_velocity: Velocity) -> Velocity:
+def velocity_interpreter(event, block_size: int, current_velocity: Velocity, snake_size_is_one: bool) -> Velocity:
     directions = Direction(block_size)
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
-            if current_velocity != directions.right:
+            if current_velocity != directions.right or snake_size_is_one:
                 return directions.left
         elif event.key == pygame.K_RIGHT:
-            if current_velocity != directions.left:
+            if current_velocity != directions.left or snake_size_is_one:
                 return directions.right
         elif event.key == pygame.K_UP:
-            if current_velocity != directions.down:
+            if current_velocity != directions.down or snake_size_is_one:
                 return directions.up
         elif event.key == pygame.K_DOWN:
-            if current_velocity != directions.up:
+            if current_velocity != directions.up or snake_size_is_one:
                 return directions.down
     return current_velocity
 
@@ -62,13 +62,13 @@ def food_based_action(food: Food, snake: Snake, state: State) -> Action:
 
     def not_opposite_speed_choice() -> Set[Action]:
         choices = set()
-        if not state.going_left.value:
+        if not state.going_left.value or len(snake.body) == 1:
             choices.add(Action.RIGHT)
-        if not state.going_right.value:
+        if not state.going_right.value or len(snake.body) == 1:
             choices.add(Action.LEFT)
-        if not state.going_up.value:
+        if not state.going_up.value or len(snake.body) == 1:
             choices.add(Action.DOWN)
-        if not state.going_down.value:
+        if not state.going_down.value or len(snake.body) == 1:
             choices.add(Action.UP)
         return choices
 
@@ -120,6 +120,9 @@ class SnakeGame:
     best_score_episode: int = 0
     current_episode: int = 1
     paused: bool = False
+
+    _scores = []
+    _scores_episode = []
 
     # font_position: Coord = None
     _screen_coords: Set[Coord] = None
@@ -278,7 +281,8 @@ class SnakeGame:
                 break
 
             old_velocity = self.snake.velocity
-            new_velocity = velocity_interpreter(event, self.game_config.block_size, self.snake.velocity)
+            new_velocity = velocity_interpreter(event, self.game_config.block_size, self.snake.velocity,
+                                                len(self.snake.body) == 1)
             self.snake.change_velocity(new_velocity)
             if old_velocity != new_velocity:
                 # This is important because the pygame.event attribute is queue.
@@ -391,7 +395,7 @@ class SnakeGame:
                 self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except QuitGame:
                 print('Exiting..')
-                return self.build_dump_object_info()
+                return self.build_dump_object_info(), self._scores_episode, self._scores
 
             if self.game_config.action_taker_policy == ActionTakerPolicy.AI_AGENT:
                 self.human_turn = False
@@ -414,12 +418,18 @@ class SnakeGame:
                   f"The snake died from wall hit {self.died_wall_hit_counter} times.\n"
                   f"The snake died from body hit {self.died_body_hit_counter} times.\n", )
             self.agent.episode_reinforcement()
-            if int(self.food.score) > self.best_score:
+            has_best_score = int(self.food.score) > self.best_score
+            if has_best_score:
                 self.best_score = int(self.food.score)
                 self.best_score_episode = self.current_episode
+
+            if self.current_episode % 10 == 0 or has_best_score:
+                self._scores.append(int(self.food.score))
+                self._scores_episode.append(self.current_episode)
 
         # End of experiment!!
         print(f"End of experiment.\n"
               f"Best score was {self.best_score}\n"
               f"Epsilon was {self.agent.policy.epsilon}")
-        return self.build_dump_object_info()
+
+        return self.build_dump_object_info(), self._scores_episode, self._scores

@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+from pathlib import Path
 from src.agents.monte_carlo import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.game import SnakeGame
@@ -7,12 +9,26 @@ import math
 import json
 
 
-def dump_results_to_file(result):
+def dump_results_to_file(result, x, y):
     timestamp = math.floor(time())
-    path = f"result_{timestamp}_score_{result['header']['statistics']['best_score']}.json"
-    print(f"Dumping results to file {path}")
-    with open(path, "w") as fp:
+    folder = f"results/result_{timestamp}_score_{result['header']['statistics']['best_score']}"
+    Path(folder).mkdir(parents=True, exist_ok=True)
+
+    print(f"Dumping results to directory {folder}")
+    with open(f"{folder}/info.json", "w") as fp:
         json.dump(result, fp, sort_keys=True, indent=4)
+
+    plt.plot(x, y)
+    plt.xlabel('episode')
+    plt.ylabel('score')
+    plt.savefig(f"{folder}/graph.png")
+
+
+def plot_results(x, y):
+    plt.plot(x, y)
+    plt.xlabel('episode')
+    plt.ylabel('score')
+    plt.show()
 
 
 def run():
@@ -31,14 +47,14 @@ def run():
         block_interactions=False,
         missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.MIXED_FOOD_AI,
-        default_reward=0.01,
+        default_reward=0,
         food_reward=10,
-        punishment=-20,
+        punishment=-10,
         show_game=False,
         speed_delta=10,
-        run_for_n_minutes=40,
+        run_for_n_minutes=20,
         change_agent_episode=500,
-        body_hit_punishment=-20
+        body_hit_punishment=-10
     )
 
     _snake_config = SnakeConfig(
@@ -48,9 +64,9 @@ def run():
     )
 
     _agent = MonteCarloAgent(
-        every_visit=False,
+        every_visit=True,
         gamma=1.01,
-        epsilon_step_increment=0.01,
+        epsilon_step_increment=1,
         initial_epsilon=1,
         use_individual_policies=True,
         learning_incentive=False,
@@ -65,13 +81,14 @@ def run():
 
     start = time()
     # Run the game
-    result = _game.loop()
+    result, x, y = _game.loop()
     end = time()
 
     _time = math.floor(end-start)
     if isinstance(result, dict):
         result["header"]["statistics"]["seconds"] = _time
-        dump_results_to_file(result)
+        dump_results_to_file(result, x, y)
+        plot_results(x, y)
     print(f"\nElapsed time: {_time} seconds")
 
 

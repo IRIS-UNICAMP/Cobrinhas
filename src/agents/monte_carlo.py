@@ -158,7 +158,6 @@ class MonteCarloAgent:
 
             # There was no better action
             if all_equal:
-                print('choosing random')
                 return random.choice(actions)
 
             # up = self._state_action_value[state][Action.UP.value].value
@@ -176,7 +175,7 @@ class MonteCarloAgent:
         for step, record in enumerate(self._history):
             state_exists = self.init_state_if_needed(record.state)
             if not state_exists:
-                self._state_action_value[record.state]["counter"] += 1
+                self._state_action_value[record.state]["counter"] = 1
                 self._chosen_policy = self._state_action_value[record.state]["policy"]
             if not self._every_visit and self._state_action_value[record.state]["has_been_visited"]:
                 continue
@@ -195,12 +194,11 @@ class MonteCarloAgent:
 
                 if update_epsilon:
                     state_count = self._state_action_value[record.state]["counter"]
-                    # epsilon_value = self._state_action_value[record.state]["policy"].epsilon
+                    epsilon_value = self._state_action_value[record.state]["policy"].epsilon
                     epsilon_step = self._state_action_value[record.state]["policy"].epsilon_step
                     self._last_reinforcement_factor = factor
-                    # self._state_action_value[record.state]["policy"].epsilon =
-                    # 1 / ((1 / epsilon_value) + epsilon_step)
-                    self._state_action_value[record.state]["policy"].epsilon = 1 / (state_count + epsilon_step)
+                    self._state_action_value[record.state]["policy"].epsilon = 1 / ((1 / epsilon_value) + epsilon_step)
+                    # self._state_action_value[record.state]["policy"].epsilon = 1 / (state_count + epsilon_step)
 
             self._reinforce_state_action(record, factor)
 
