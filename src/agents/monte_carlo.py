@@ -1,7 +1,3 @@
-import random
-from abc import ABC
-from typing import List, Dict
-
 from src.agents.abstract_agent import AbstractAgent
 from src.shared import Action, HistoryRecord, Policy, StateActionInfo
 
@@ -19,18 +15,13 @@ JSONEncoder.default = _default
 
 
 class MonteCarloAgent(AbstractAgent):
-    
+
     # unneeded methods
-    def step_reinforcement(self):
+    def step_reinforcement(self, reward: int, current_state: str):
         pass
 
-    _history: List[HistoryRecord] = list()
-    _state_action_value: Dict = {}
     _episode_counter = 1
-    _policy = Policy()
-    _chosen_policy: Policy
     _last_reinforcement_factor = float('-inf')
-    _use_individual_policies: bool
     _learning_incentive: bool
     _epsilon_step_increment: float
     _initial_epsilon: float
@@ -72,32 +63,11 @@ class MonteCarloAgent(AbstractAgent):
         else:
             return data
 
-    @property
-    def state_amount(self) -> int:
-        return len(self._state_action_value.keys())
-
-    @property
-    def policy(self) -> Policy:
-        if self._use_individual_policies:
-            return self._chosen_policy
-        else:
-            return self._policy
-
-    def save_to_history(self, state: str, action: Action, reward: float):
-        # Save to history
-        self._history.append(
-            HistoryRecord(
-                state=state,
-                reward=reward,
-                action=action
-            )
-        )
-
     def init_state_if_needed(self, state: str) -> bool:
         # Initializing specific state dict
         if state not in self._state_action_value.keys():
             self._state_action_value[state] = {
-                "counter": 0,
+                "counter": 1,
                 Action.UP.value: StateActionInfo(Action.UP),
                 Action.DOWN.value: StateActionInfo(Action.DOWN),
                 Action.LEFT.value: StateActionInfo(Action.LEFT),
@@ -119,61 +89,6 @@ class MonteCarloAgent(AbstractAgent):
                 }
             return False
         return True
-
-    def _reinforce_state_action(self, record: HistoryRecord, factor: float):
-        # Increment Counter (N(s,a))
-        self._state_action_value[record.state][record.action.value].counter += 1
-
-        # Reinforce (Q(s,a))
-        state_action_value = self._state_action_value[record.state][record.action.value].value
-        state_action_count = self._state_action_value[record.state][record.action.value].counter
-        new_sate_action_value = state_action_value + ((1 / state_action_count) * (factor - state_action_value))
-        self._state_action_value[record.state][record.action.value].value = new_sate_action_value
-
-    def _reset_visited_flag(self):
-        if self._every_visit:
-            raise Exception("Should not need to reset visit flags when the algorithm is every-visit")
-        for state in self._state_action_value.keys():
-            self._state_action_value[state]["has_been_visited"] = False
-
-    def choose_action(self, state) -> Action:
-        self.init_state_if_needed(state)
-        self._state_action_value[state]["counter"] += 1
-        policy: Policy
-        if self._use_individual_policies:
-            policy = self._state_action_value[state]["policy"]
-            self._chosen_policy = policy
-        else:
-            policy = self._policy
-
-        random_value = random.random()
-        actions = [e for e in Action]
-        if random_value <= policy.epsilon:
-            return random.choice(actions)
-        else:
-            best_action: StateActionInfo = StateActionInfo(Action.UP)
-            best_action.value = float('-inf')
-            last_value = self._state_action_value[state][actions[0].value].value
-            all_equal = True
-            for action in actions:
-                current_value = self._state_action_value[state][action.value].value
-                all_equal = (all_equal and last_value == current_value)
-                last_value = current_value
-                if current_value > best_action.value:
-                    best_action = self._state_action_value[state][action.value]
-
-            # There was no better action
-            if all_equal:
-                return random.choice(actions)
-
-            # up = self._state_action_value[state][Action.UP.value].value
-            # down = self._state_action_value[state][Action.DOWN.value].value
-            # left = self._state_action_value[state][Action.LEFT.value].value
-            # right = self._state_action_value[state][Action.RIGHT.value].value
-            # actions_str = f"Actions were UP: {up}, DOWN: {down}, LEFT: {left}, RIGHT: {right}.\nChose: " \
-            #               f"{best_action.action.value}."
-            # print(actions_str)
-            return best_action.action
 
     def episode_reinforcement(self):
         factor = self._calculate_reinforcement_factor()
@@ -199,7 +114,7 @@ class MonteCarloAgent(AbstractAgent):
                     update_epsilon = True
 
                 if update_epsilon:
-                    state_count = self._state_action_value[record.state]["counter"]
+                    # state_count = self._state_action_value[record.state]["counter"]
                     epsilon_value = self._state_action_value[record.state]["policy"].epsilon
                     epsilon_step = self._state_action_value[record.state]["policy"].epsilon_step
                     self._last_reinforcement_factor = factor
@@ -227,6 +142,19 @@ class MonteCarloAgent(AbstractAgent):
         self._history = []
         self._episode_counter += 1
 
+    def _reinforce_state_action(self, record: HistoryRecord, factor: float):
+        # Reinforce (Q(s,a))
+        state_action_value = self._state_action_value[record.state][record.action.value].value
+        state_action_count = self._state_action_value[record.state][record.action.value].counter
+        new_sate_action_value = state_action_value + ((1 / state_action_count) * (factor - state_action_value))
+        self._state_action_value[record.state][record.action.value].value = new_sate_action_value
+
+    def _reset_visited_flag(self):
+        if self._every_visit:
+            raise Exception("Should not need to reset visit flags when the algorithm is every-visit")
+        for state in self._state_action_value.keys():
+            self._state_action_value[state]["has_been_visited"] = False
+
     def _calculate_reinforcement_factor(self):
         factor = 0
         if self._reverse_history:
@@ -236,7 +164,3 @@ class MonteCarloAgent(AbstractAgent):
         for step, record in enumerate(history):
             factor += record.reward * pow(self._gamma, step)
         return factor
-
-    @property
-    def state_action_values(self):
-        return self._state_action_value

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import IntEnum, Enum
+from functools import total_ordering
 from typing import Tuple, List
 
 import pygame
@@ -41,6 +42,19 @@ def map_action_to_keypress(action: Action):
         return pygame.K_RIGHT
     else:
         raise ValueError(f"Unknown action {str(action)}")
+
+
+def map_keypress_to_action(key):
+    if key == pygame.K_UP:
+        return Action.UP
+    elif key == pygame.K_DOWN:
+        return Action.DOWN
+    elif key == pygame.K_LEFT:
+        return Action.LEFT
+    elif key == pygame.K_RIGHT:
+        return Action.RIGHT
+    else:
+        return None
 
 
 class Colors(Enum):
@@ -95,7 +109,7 @@ class Policy:
 
 
 class StateActionInfo:
-    counter: int = 0  # N
+    counter: int = 1  # N
     value: float = 0  # Q(s,a)
     action: Action
     policy: Policy = Policy()
@@ -108,3 +122,10 @@ class StateActionInfo:
             "counter": self.counter,
             "value": self.value,
         }
+
+
+class Problem(Enum):
+    WALL_HIT = "WALL_HIT"
+    BODY_HIT = "BODY_HIT"
+    TOO_DUMB = "TOO_DUMB"
+    QUIT = "QUIT"

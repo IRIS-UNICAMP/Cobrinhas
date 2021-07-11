@@ -10,7 +10,7 @@ from src.agents.monte_carlo import MonteCarloAgent
 from src.configs import GameConfig, SnakeConfig
 from src.exceptions import SnakeGameException, QuitGame, TooDumb, WallHit, BodyHit
 from src.food import Food
-from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress, ActionTakerPolicy
+from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress, ActionTakerPolicy, Problem
 from src.snake import Snake
 from src.state import State
 
@@ -278,6 +278,7 @@ class SnakeGame:
                 ###############################################################
 
             if self.paused:
+                # skip everything below this line. If the game is paused we don't want to change the snake's velocity
                 break
 
             old_velocity = self.snake.velocity
@@ -329,85 +330,90 @@ class SnakeGame:
             try:
                 # Running an episode
                 missed_food_times = 0
+                self.state.populate(self.snake, self.food.position, self.game_config).set_state()
                 while True:
-                    # print(f"snake ({self.snake.head.x}, {self.snake.head.y})")
-                    # Here we define the state and take the best action
-                    self.state.populate(self.snake, self.food.position, self.game_config).set_state()
-                    # print(self.state)
-                    # put_random_dir(pygame.event)
-
-                    # Choosing the best action given the current state
-                    # and putting the keypress event in the queue
-                    if not self.human_turn:
-                        self.game_config.block_interactions = True
-                        if self.food_ai_turn:
-                            action = food_based_action(self.food, self.snake, self.state)
-                        else:
-                            action = self.agent.choose_action(self.state.value)
-                        put_keypress_event(pygame.event, action)
-                    else:
-                        self.game_config.block_interactions = False
-                        self.agent.init_state_if_needed(self.state.value)
-
-                    # Process the current events in the queue
-                    self.process_events()
-
                     if self.paused:
+                        # process events one more time so we can listen for 'p' key
+                        self.process_events()
                         self.clock.tick(self.snake_config.speed)
                         continue
 
-                    self.snake.slither(has_eaten)
+                    if self.food_ai_turn:
+                        action = food_based_action(self.food, self.snake, self.state)
+                    else:
+                        # choose action from agent
+                        action = self.agent.choose_action(self.state.value).action
 
-                    # This will tell the snake printer function to not
-                    # erase it's tail if a food has been eaten. this way you will gain size
+                    # Put event in the queue
+                    put_keypress_event(pygame.event, action)
+
+                    # process events (there might be others besides snake velocity changes)
+                    self.process_events()
+
+                    # make the snake slither and catch the problems encountered
+                    problem: Problem = self.snake.slither(has_eaten)
+
+                    # helper flag to decide whether to pop or not pop the tail
                     has_eaten = False
-                    if self.food.can_be_eaten(self.snake.head):
+
+                    # calculate reward
+                    if problem == Problem.BODY_HIT:
+                        reward = self.game_config.body_hit_punishment
+                    elif problem == Problem.WALL_HIT:
+                        reward = self.game_config.punishment
+                    elif missed_food_times > self.game_config.missed_food_max_steps:
+                        problem = Problem.TOO_DUMB
+                        reward = self.game_config.punishment
+                    elif self.food.can_be_eaten(self.snake.head):
                         self.food.eat(self.available_positions)
                         has_eaten = True
                         self.show_score()
-                        self.agent.save_to_history(self.state.value, action, self.game_config.food_reward)
                         missed_food_times = 0
+                        reward = self.game_config.food_reward
                     else:
-                        self.agent.save_to_history(self.state.value, action, self.game_config.default_reward)
                         missed_food_times += 1
+                        reward = self.game_config.default_reward
 
-                    if missed_food_times > self.game_config.missed_food_max_steps:
-                        raise TooDumb()
+                    # save the reward history. some agents might use this info
+                    self.agent.save_to_history(self.state.value, action, reward)
+
+                    # populate new state
+                    self.state.populate(self.snake, self.food.position, self.game_config).set_state()
+
+                    # The agent might need to make a step reinforcement
+                    self.agent.step_reinforcement(reward, self.state.value)
 
                     self.update_display()
+
+                    # now, check for problems
+                    if problem is not None:
+                        msg = ""
+                        if problem == Problem.WALL_HIT:
+                            self.died_wall_hit_counter += 1
+                            msg = f"The snake died from wall hit at coords ({self.snake.head.x},{self.snake.head.y})"
+                        elif problem == Problem.BODY_HIT:
+                            self.died_body_hit_counter += 1
+                            msg = f"The snake died from body hit at coords ({self.snake.head.x},{self.snake.head.y})"
+                        elif problem == Problem.TOO_DUMB:
+                            self.too_dumb_counter += 1
+                            msg = "The snake didn't know what to do.."
+                        elif problem == Problem.QUIT:
+                            print('Exiting..')
+                            return self.build_dump_object_info(), self._scores_episode, self._scores
+
+                        print(msg)
+                        # if there's a problem, we should end this episode
+                        break
+
                     self.clock.tick(self.snake_config.speed)
-            except SnakeGameException as e:
-                print('\n\n')
-                print(e)
-                if isinstance(e, WallHit):
-                    self.died_wall_hit_counter += 1
-                    self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
-                elif isinstance(e, BodyHit):
-                    self.died_body_hit_counter += 1
-                    self.agent.save_to_history(self.state.value, action, self.game_config.body_hit_punishment)
 
-                # pygame.time.wait(10000)
-
-            except TooDumb as e:
-                print('\n\n')
-                print(e)
-                self.too_dumb_counter += 1
-                self.agent.save_to_history(self.state.value, action, self.game_config.punishment)
             except QuitGame:
                 print('Exiting..')
                 return self.build_dump_object_info(), self._scores_episode, self._scores
 
-            if self.game_config.action_taker_policy == ActionTakerPolicy.AI_AGENT:
-                self.human_turn = False
-            elif self.game_config.action_taker_policy == ActionTakerPolicy.HUMAN:
-                self.human_turn = True
-            elif self.game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
+            if self.game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
                 if self.current_episode > self.game_config.change_agent_episode:
                     self.food_ai_turn = False
-            else:
-                self.human_turn = not self.human_turn
-                self.paused = True
-                self.toggle_pause_text()
 
             # End of episode!!
             print(f"Episode {self.current_episode}/{self.game_config.number_of_episodes}. "

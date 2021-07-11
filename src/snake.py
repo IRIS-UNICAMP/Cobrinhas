@@ -7,7 +7,7 @@ from pygame import Surface
 
 from src.configs import GameConfig, SnakeConfig
 from src.exceptions import WallHit, BodyHit
-from src.shared import Velocity, Coord, Direction
+from src.shared import Velocity, Coord, Direction, Problem
 
 
 class Snake:
@@ -37,23 +37,23 @@ class Snake:
     def change_velocity(self, velocity: Velocity):
         self._velocity = velocity
 
-    def can_slither(self) -> Exception:
+    def can_slither(self) -> Problem:
         new_head = self._body[0].translate(self._velocity)
         wall_danger = new_head.x < 0 or new_head.x >= self.game_config.screen_width \
                       or new_head.y < 0 or new_head.y >= self.game_config.screen_height
         body_danger = new_head in self._body
 
         if wall_danger:
-            return WallHit(new_head)
+            return Problem.WALL_HIT
         if body_danger:
-            return BodyHit(new_head)
+            return Problem.BODY_HIT
 
     def slither(self, has_eaten: bool):
         head = self._body[0].translate(self._velocity)
         # print(f"Slithering head to ({head.x},{head.y})")
         evaluation = self.can_slither()
         if evaluation is not None:
-            raise evaluation
+            return evaluation
 
         self._body.insert(0, head)
         if not has_eaten:

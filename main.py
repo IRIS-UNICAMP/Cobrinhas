@@ -53,7 +53,7 @@ def run():
         show_game=False,
         speed_delta=10,
         run_for_n_minutes=20,
-        change_agent_episode=500,
+        change_agent_episode=200,
         body_hit_punishment=-10
     )
 
