@@ -27,13 +27,9 @@ class QLearning(AbstractAgent):
     _learning_incentive: bool
     _alpha: float
 
-    def __init__(self,
-                 gamma=1.01,
-                 epsilon_step_increment=0.1,
-                 initial_epsilon=1,
-                 learning_incentive=False,
-                 use_individual_policies=False,
-                 alpha=0.2):
+    def __init__(self, gamma=1.01, epsilon_step_increment=0.1, initial_epsilon=1, learning_incentive=False,
+                 use_individual_policies=False, alpha=0.2):
+        super().__init__("q_learning")
         self._gamma = gamma
         if not use_individual_policies:
             self._policy = Policy()
@@ -48,6 +44,7 @@ class QLearning(AbstractAgent):
         data = {
             "gamma": self._gamma,
             "use_individual_policies": self._use_individual_policies,
+            "name": self.name
         }
         if not self._use_individual_policies:
             return {
@@ -80,11 +77,12 @@ class QLearning(AbstractAgent):
         return True
 
     def step_reinforcement(self, reward: int, current_state: str):
+        self.init_state_if_needed(current_state)
         max_action_value = max(x.value for x in self.state_actions(current_state))
         deviation = reward + self._gamma * max_action_value - self._last_action_info.value
         new_action_value = self._last_action_info.value + self._alpha * deviation
         self._state_action_value[self._last_state][self._last_action_info.action.value].value = new_action_value
-
+        # print(f"max_action_value: {max_action_value}, deviation: {deviation}, new_action_value: {new_action_value}")
         if self._use_individual_policies:
             # state_count = self._state_action_value[last_state]["counter"]
             epsilon_value = self._state_action_value[self._last_state]["policy"].epsilon

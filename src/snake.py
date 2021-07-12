@@ -6,7 +6,6 @@ import pygame
 from pygame import Surface
 
 from src.configs import GameConfig, SnakeConfig
-from src.exceptions import WallHit, BodyHit
 from src.shared import Velocity, Coord, Direction, Problem
 
 

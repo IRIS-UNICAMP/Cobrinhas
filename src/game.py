@@ -6,9 +6,9 @@ from pygame.time import Clock
 
 from typing import Set
 
-from src.agents.monte_carlo import MonteCarloAgent
+from src.agents.abstract_agent import AbstractAgent
 from src.configs import GameConfig, SnakeConfig
-from src.exceptions import SnakeGameException, QuitGame, TooDumb, WallHit, BodyHit
+from src.exceptions import QuitGame
 from src.food import Food
 from src.shared import Velocity, Coord, Direction, Colors, Action, map_action_to_keypress, ActionTakerPolicy, Problem
 from src.snake import Snake
@@ -134,7 +134,7 @@ class SnakeGame:
     screen: Surface
     food: Food
     state: State = State()
-    agent: MonteCarloAgent
+    agent: AbstractAgent
 
     too_dumb_counter = 0
     died_wall_hit_counter = 0
@@ -146,7 +146,7 @@ class SnakeGame:
     def __init__(self,
                  snake_config: SnakeConfig,
                  game_config: GameConfig,
-                 agent: MonteCarloAgent
+                 agent: AbstractAgent
                  ):
         SnakeGame._validate_attributes(snake_config, game_config)
         self.snake_config = snake_config
@@ -326,7 +326,6 @@ class SnakeGame:
             # Initialize variables
             self.current_episode += 1
             has_eaten = False
-            action: Action = Action.UP  # Random action for initialization
             try:
                 # Running an episode
                 missed_food_times = 0
@@ -340,6 +339,9 @@ class SnakeGame:
 
                     if self.food_ai_turn:
                         action = food_based_action(self.food, self.snake, self.state)
+                        self.agent.init_state_if_needed(self.state.value)
+                        agent_action_info = self.agent.get_action_info(self.state.value, action)
+                        self.agent.set_last_action_info(self.state.value, agent_action_info)
                     else:
                         # choose action from agent
                         action = self.agent.choose_action(self.state.value).action
@@ -358,7 +360,7 @@ class SnakeGame:
 
                     # calculate reward
                     if problem == Problem.BODY_HIT:
-                        reward = self.game_config.body_hit_punishment
+                        reward = self.game_config.punishment
                     elif problem == Problem.WALL_HIT:
                         reward = self.game_config.punishment
                     elif missed_food_times > self.game_config.missed_food_max_steps:
@@ -431,9 +433,9 @@ class SnakeGame:
                 self.best_score = int(self.food.score)
                 self.best_score_episode = self.current_episode
 
-            if self.current_episode % 10 == 0 or has_best_score:
-                self._scores.append(int(self.food.score))
-                self._scores_episode.append(self.current_episode)
+            # if self.current_episode % 10 == 0 or has_best_score:
+            self._scores.append(int(self.food.score))
+            self._scores_episode.append(self.current_episode)
 
         # End of experiment!!
         print(f"End of experiment.\n"

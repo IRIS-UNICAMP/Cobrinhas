@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from pathlib import Path
 from src.agents.monte_carlo import MonteCarloAgent
+from src.agents.q_learning import QLearning
 from src.configs import GameConfig, SnakeConfig
 from src.game import SnakeGame
 from src.shared import Colors, ActionTakerPolicy
@@ -18,14 +19,14 @@ def dump_results_to_file(result, x, y):
     with open(f"{folder}/info.json", "w") as fp:
         json.dump(result, fp, sort_keys=True, indent=4)
 
-    plt.plot(x, y)
+    plt.scatter(x, y)
     plt.xlabel('episode')
     plt.ylabel('score')
     plt.savefig(f"{folder}/graph.png")
 
 
 def plot_results(x, y):
-    plt.plot(x, y)
+    plt.scatter(x, y)
     plt.xlabel('episode')
     plt.ylabel('score')
     plt.show()
@@ -46,15 +47,14 @@ def run():
         number_of_episodes=100000,
         block_interactions=False,
         missed_food_max_steps=1000,
-        action_taker_policy=ActionTakerPolicy.MIXED_FOOD_AI,
+        action_taker_policy=ActionTakerPolicy.AI_AGENT,
         default_reward=0,
         food_reward=10,
         punishment=-10,
         show_game=False,
         speed_delta=10,
         run_for_n_minutes=20,
-        change_agent_episode=200,
-        body_hit_punishment=-10
+        change_agent_episode=200
     )
 
     _snake_config = SnakeConfig(
@@ -63,20 +63,29 @@ def run():
         initial_length=1
     )
 
-    _agent = MonteCarloAgent(
+    monte_carlo_agent = MonteCarloAgent(
         every_visit=True,
-        gamma=1.01,
-        epsilon_step_increment=1,
+        gamma=0.5,
+        epsilon_step_increment=0.1,
         initial_epsilon=1,
         use_individual_policies=True,
         learning_incentive=False,
-        reverse_history=False
+        reverse_history=True
+    )
+
+    q_learning_agent = QLearning(
+        gamma=1.01,
+        epsilon_step_increment=0.1,
+        initial_epsilon=1,
+        learning_incentive=False,
+        use_individual_policies=False,
+        alpha=0.01
     )
 
     _game = SnakeGame(
         snake_config=_snake_config,
         game_config=_game_config,
-        agent=_agent
+        agent=monte_carlo_agent
     )
 
     start = time()

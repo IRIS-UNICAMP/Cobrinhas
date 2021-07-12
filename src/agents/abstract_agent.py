@@ -15,6 +15,13 @@ class AbstractAgent(ABC):
     _last_action_info: StateActionInfo
     _last_state: str
 
+    def __init__(self, name: str):
+        self._name = name
+
+    @property
+    def name(self):
+        return self._name
+
     def best_action(self, state: str) -> StateActionInfo:
         best_action: StateActionInfo = StateActionInfo(Action.UP)
         best_action.value = float('-inf')
@@ -29,7 +36,7 @@ class AbstractAgent(ABC):
 
         # There was no better action
         if all_equal:
-            return random.choice(self._actions)
+            return random.choice(self.state_actions(state))
 
         # up = self._state_action_value[state][Action.UP.value].value
         # down = self._state_action_value[state][Action.DOWN.value].value
@@ -37,7 +44,6 @@ class AbstractAgent(ABC):
         # right = self._state_action_value[state][Action.RIGHT.value].value
         # actions_str = f"Actions were UP: {up}, DOWN: {down}, LEFT: {left}, RIGHT: {right}.\nChose: " \
         #               f"{best_action.action.value}."
-        # print(actions_str)
         return best_action
 
     def choose_action(self, state) -> StateActionInfo:
@@ -61,9 +67,15 @@ class AbstractAgent(ABC):
         # Increment Counter (N(s,a))
         self._state_action_value[state][best_action.action.value].counter += 1
 
-        self._last_state = state
-        self._last_action_info = best_action
+        self.set_last_action_info(state, best_action)
         return best_action
+
+    def set_last_action_info(self, state: str, action_info: StateActionInfo):
+        self._last_state = state
+        self._last_action_info = action_info
+
+    def get_action_info(self, state: str, action: Action) -> StateActionInfo:
+        return self._state_action_value[state][action.value]
 
     def save_to_history(self, state: str, action: Action, reward: float):
         # Save to history

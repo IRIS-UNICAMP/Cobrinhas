@@ -35,6 +35,7 @@ class MonteCarloAgent(AbstractAgent):
                  use_individual_policies=False,
                  learning_incentive=True,
                  reverse_history=True):
+        super().__init__("monte_carlo")
         self._gamma = gamma
         self._every_visit = every_visit
         if not use_individual_policies:
@@ -52,7 +53,8 @@ class MonteCarloAgent(AbstractAgent):
             "every_visit": self._every_visit,
             "use_individual_policies": self._use_individual_policies,
             "learning_incentive": self._learning_incentive,
-            "reverse_history": self._reverse_history
+            "reverse_history": self._reverse_history,
+            "name": self.name
         }
         if not self._use_individual_policies:
             return {
