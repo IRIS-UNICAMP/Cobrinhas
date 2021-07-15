@@ -8,6 +8,7 @@ from src.shared import Colors, ActionTakerPolicy
 from time import time
 import math
 import json
+from os import system, name
 
 
 def dump_results_to_file(result, x, y):
@@ -30,6 +31,13 @@ def plot_results(x, y):
     plt.xlabel('episode')
     plt.ylabel('score')
     plt.show()
+
+
+def clear():
+    if name == 'nt':
+        system('cls')
+    else:
+        system('clear')
 
 
 def run():
@@ -82,10 +90,22 @@ def run():
         alpha=0.01
     )
 
+    clear()
+    option = int(input("""
+    Escolha sua opção de agente:
+     1) Monte Carlo
+     2) Q-Learning
+    """))
+
+    if option == 1:
+        agent = monte_carlo_agent
+    else:
+        agent = q_learning_agent
+
     _game = SnakeGame(
         snake_config=_snake_config,
         game_config=_game_config,
-        agent=monte_carlo_agent
+        agent=agent
     )
 
     start = time()
