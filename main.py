@@ -92,10 +92,10 @@ def run():
 
     clear()
     option = int(input("""
-    Escolha sua opção de agente:
-     1) Monte Carlo
-     2) Q-Learning
-    """))
+Escolha sua opção de agente:
+1) Monte Carlo
+2) Q-Learning
+Digite o número: """))
 
     if option == 1:
         agent = monte_carlo_agent
