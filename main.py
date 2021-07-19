@@ -62,7 +62,8 @@ def run():
         show_game=False,
         speed_delta=10,
         run_for_n_minutes=20,
-        change_agent_episode=200
+        change_agent_episode=200,
+        paint_sideways=True
     )
 
     _snake_config = SnakeConfig(

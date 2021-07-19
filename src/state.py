@@ -56,6 +56,7 @@ class State:
     going_right_danger_ahead: StateInfo = StateInfo(False, "going_right_danger_ahead")
     going_down_danger_ahead: StateInfo = StateInfo(False, "going_down_danger_ahead")
     going_up_danger_ahead: StateInfo = StateInfo(False, "going_up_danger_ahead")
+    left_has_more_available_parts: StateInfo = StateInfo(False, "left_has_more_available_parts")
     snake_size: SnakeSize = SnakeSize(False, "snake_size")
 
     def dict(self):
@@ -96,6 +97,7 @@ class State:
             self.danger_down,
             self.danger_up,
             # self.snake_size,
+            self.left_has_more_available_parts
         ]
         state = build_state_str(self._state_values)
         # state += str(int(self._going_left))
@@ -176,6 +178,8 @@ class State:
         self.going_right_danger_ahead = going_right_wall_ahead or going_right_body_ahead
         self.going_down_danger_ahead = going_down_wall_ahead or going_down_body_ahead
         self.going_up_danger_ahead = going_up_wall_ahead or going_up_body_ahead
+
+        self.left_has_more_available_parts.value = len(snake.leftmost_positions) > len(snake.rightmost_positions)
 
         return self
 

@@ -23,6 +23,9 @@ class Coord:
     def to_array(self) -> List:
         return [self.x, self.y]
 
+    def __eq__(self, other):
+        return other.x == self.x and other.y == self.y
+
 
 class Action(Enum):
     UP = "UP"
@@ -64,6 +67,9 @@ class Colors(Enum):
     HEAD = (0, 255, 150)
     GOLD = pygame.color.Color('gold3')
     LAVENDER_BLUSH = pygame.color.Color('lavenderblush3')
+    LEFT = (0, 255, 0)
+    RIGHT = (0, 0, 255)
+
 
 
 class Direction:

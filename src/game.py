@@ -263,6 +263,9 @@ class SnakeGame:
                 elif event.key == pygame.K_s:
                     self.game_config.show_game = not self.game_config.show_game
 
+                elif event.key == pygame.K_w:
+                    self.game_config.paint_sideways = not self.game_config.paint_sideways
+
                 elif event.key == pygame.K_p:
                     # toggle pause
                     self.paused = not self.paused
@@ -333,6 +336,8 @@ class SnakeGame:
                 # Running an episode
                 missed_food_times = 0
                 self.state.populate(self.snake, self.food.position, self.game_config).set_state()
+                self.snake.sideways_xray(list(self.available_positions))
+                self.snake.paint_sideways()
                 while True:
                     if self.paused:
                         # process events one more time so we can listen for 'p' key
@@ -355,8 +360,16 @@ class SnakeGame:
                     # process events (there might be others besides snake velocity changes)
                     self.process_events()
 
+                    # clear sideways
+                    if self.game_config.paint_sideways:
+                        self.snake.erase_sideways()
+
                     # make the snake slither and catch the problems encountered
                     problem: Problem = self.snake.slither(has_eaten)
+
+                    self.snake.sideways_xray(list(self.available_positions))
+                    if self.game_config.paint_sideways:
+                        self.snake.paint_sideways()
 
                     # helper flag to decide whether to pop or not pop the tail
                     has_eaten = False
