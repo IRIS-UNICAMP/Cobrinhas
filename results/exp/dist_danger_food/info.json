@@ -1,0 +1,2515 @@
+{
+    "agent_rehearsal": {
+        "00010000": {
+            "DOWN": {
+                "counter": 2,
+                "value": -1.1533883770663783e-06
+            },
+            "LEFT": {
+                "counter": 1026,
+                "value": 183.48884466796963
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 1028
+        },
+        "00010001": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 103,
+                "value": 98.72170518965542
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 103
+        },
+        "00010010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.09999997955269145
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -3.795708380591549e-07
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 9465,
+                "value": 279.3390218920725
+            },
+            "counter": 9467
+        },
+        "00010011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 84,
+                "value": 55.15136729225543
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 87
+        },
+        "00010100": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 546,
+                "value": 159.5940850620863
+            },
+            "counter": 547
+        },
+        "00010101": {
+            "DOWN": {
+                "counter": 2,
+                "value": -1.96e-05
+            },
+            "LEFT": {
+                "counter": 298,
+                "value": 175.67659891365523
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 300
+        },
+        "00010110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 732,
+                "value": 103.97921617214394
+            },
+            "counter": 733
+        },
+        "00010111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 15,
+                "value": 9.577782790625232
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 18
+        },
+        "00011000": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1156,
+                "value": 200.8203069115147
+            },
+            "counter": 1156
+        },
+        "00011001": {
+            "DOWN": {
+                "counter": 2,
+                "value": -3.6e-06
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 742,
+                "value": 224.7952572180846
+            },
+            "UP": {
+                "counter": 2,
+                "value": -2.8e-06
+            },
+            "counter": 745
+        },
+        "00011010": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 800,
+                "value": 101.17941703346791
+            },
+            "counter": 801
+        },
+        "00011011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 12,
+                "value": -0.0820123431213384
+            },
+            "RIGHT": {
+                "counter": 193,
+                "value": 67.43764979421768
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 206
+        },
+        "00011100": {
+            "DOWN": {
+                "counter": 75,
+                "value": 36.61112486088212
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.0001292
+            },
+            "counter": 78
+        },
+        "00011101": {
+            "DOWN": {
+                "counter": 107,
+                "value": 31.048126205866964
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 110
+        },
+        "00011110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 4,
+                "value": 1.768932213356722
+            },
+            "counter": 5
+        },
+        "00011111": {
+            "DOWN": {
+                "counter": 6,
+                "value": -0.5001000100005
+            },
+            "LEFT": {
+                "counter": 6,
+                "value": -0.5001000100005
+            },
+            "RIGHT": {
+                "counter": 6,
+                "value": -0.5001000100005
+            },
+            "UP": {
+                "counter": 6,
+                "value": -0.5001000100005
+            },
+            "counter": 21
+        },
+        "00100000": {
+            "DOWN": {
+                "counter": 312,
+                "value": 60.66956079641587
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 312
+        },
+        "00100001": {
+            "DOWN": {
+                "counter": 2,
+                "value": 0.01854381378391673
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 0.15599067193628827
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 52547,
+                "value": 338.67355188346346
+            },
+            "counter": 52550
+        },
+        "00100010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -5.199999999999999e-06
+            },
+            "LEFT": {
+                "counter": 19,
+                "value": 9.421513347674958
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 2,
+                "value": -4.399999999999999e-06
+            },
+            "counter": 22
+        },
+        "00100011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 117,
+                "value": 84.88424885379473
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 117
+        },
+        "00100100": {
+            "DOWN": {
+                "counter": 7666,
+                "value": 328.4682524209043
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "UP": {
+                "counter": 3,
+                "value": 0.0033668798001359485
+            },
+            "counter": 7669
+        },
+        "00100101": {
+            "DOWN": {
+                "counter": 1389,
+                "value": 129.36665086773877
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 1389
+        },
+        "00100110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 169,
+                "value": 114.84210131855937
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -1.9604039999999997e-05
+            },
+            "counter": 171
+        },
+        "00100111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 44,
+                "value": 22.410770198683913
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 46
+        },
+        "00101000": {
+            "DOWN": {
+                "counter": 586,
+                "value": 239.162269719041
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -4.7676e-07
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -3.6e-06
+            },
+            "counter": 588
+        },
+        "00101001": {
+            "DOWN": {
+                "counter": 5011,
+                "value": 280.70482193098775
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -3.3452074899177447e-06
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 5013
+        },
+        "00101010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 147,
+                "value": 105.23310417913444
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.00023999735290512723
+            },
+            "counter": 150
+        },
+        "00101011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 93,
+                "value": 48.26760098707448
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 93
+        },
+        "00101100": {
+            "DOWN": {
+                "counter": 730,
+                "value": 203.71397116224853
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -2.0399999999999998e-05
+            },
+            "counter": 732
+        },
+        "00101101": {
+            "DOWN": {
+                "counter": 134,
+                "value": 32.03116367781064
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 136
+        },
+        "00101110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 71,
+                "value": 8.457718197434643
+            },
+            "counter": 72
+        },
+        "00101111": {
+            "DOWN": {
+                "counter": 9,
+                "value": -0.8002800560070005
+            },
+            "LEFT": {
+                "counter": 9,
+                "value": -0.8002800560070005
+            },
+            "RIGHT": {
+                "counter": 9,
+                "value": -0.8002800560070005
+            },
+            "UP": {
+                "counter": 9,
+                "value": -0.8002800560070005
+            },
+            "counter": 33
+        },
+        "01000000": {
+            "DOWN": {
+                "counter": 3,
+                "value": -5.067172392083723e-07
+            },
+            "LEFT": {
+                "counter": 5396,
+                "value": 200.8715651694865
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 10,
+                "value": 1.9213399100610352e-05
+            },
+            "counter": 5407
+        },
+        "01000001": {
+            "DOWN": {
+                "counter": 2,
+                "value": -5.432309893722477e-07
+            },
+            "LEFT": {
+                "counter": 9968,
+                "value": 353.1822292767132
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "counter": 9970
+        },
+        "01000010": {
+            "DOWN": {
+                "counter": 4,
+                "value": 0.0016830735972451119
+            },
+            "LEFT": {
+                "counter": 13932,
+                "value": 355.1339628649841
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 13935
+        },
+        "01000011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 1905,
+                "value": 263.02967912805826
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1907
+        },
+        "01000100": {
+            "DOWN": {
+                "counter": 7,
+                "value": 0.1853052748939077
+            },
+            "LEFT": {
+                "counter": 219664,
+                "value": 352.7504491313358
+            },
+            "RIGHT": {
+                "counter": 5,
+                "value": 1.6880915376609098
+            },
+            "UP": {
+                "counter": 4,
+                "value": 2.2201105320726273
+            },
+            "counter": 219677
+        },
+        "01000101": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "LEFT": {
+                "counter": 14950,
+                "value": 311.1308896009868
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 4,
+                "value": -0.1717579591723733
+            },
+            "counter": 14954
+        },
+        "01000110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 26,
+                "value": -0.0007879296093318694
+            },
+            "UP": {
+                "counter": 2993,
+                "value": 260.2715149446949
+            },
+            "counter": 3018
+        },
+        "01000111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 577,
+                "value": 173.6699894463866
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 579
+        },
+        "01001000": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.00021194869800019982
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.0001292
+            },
+            "RIGHT": {
+                "counter": 4,
+                "value": -0.0001454550252
+            },
+            "UP": {
+                "counter": 1167,
+                "value": 228.8110835566261
+            },
+            "counter": 1172
+        },
+        "01001001": {
+            "DOWN": {
+                "counter": 1073,
+                "value": 229.28180650157262
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1074
+        },
+        "01001010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1016,
+                "value": 186.93425528820632
+            },
+            "UP": {
+                "counter": 2,
+                "value": -5.0811874442810206e-05
+            },
+            "counter": 1019
+        },
+        "01001011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 326,
+                "value": 54.80402187173089
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 329
+        },
+        "01001100": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 971,
+                "value": 208.46901366992216
+            },
+            "counter": 971
+        },
+        "01001101": {
+            "DOWN": {
+                "counter": 233,
+                "value": 122.51601220701967
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 3,
+                "value": -0.09977525906936364
+            },
+            "counter": 236
+        },
+        "01001110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 158,
+                "value": 90.33925342138122
+            },
+            "counter": 159
+        },
+        "01001111": {
+            "DOWN": {
+                "counter": 23,
+                "value": -2.2023115407317637
+            },
+            "LEFT": {
+                "counter": 24,
+                "value": -2.302531771885837
+            },
+            "RIGHT": {
+                "counter": 23,
+                "value": -2.2023115407317637
+            },
+            "UP": {
+                "counter": 24,
+                "value": -2.302531771885837
+            },
+            "counter": 91
+        },
+        "01010000": {
+            "DOWN": {
+                "counter": 761,
+                "value": -0.09932535172669574
+            },
+            "LEFT": {
+                "counter": 5298,
+                "value": 211.26454304595762
+            },
+            "RIGHT": {
+                "counter": 4,
+                "value": -0.00034051627055801557
+            },
+            "UP": {
+                "counter": 13,
+                "value": -0.0002043650726177669
+            },
+            "counter": 6073
+        },
+        "01010001": {
+            "DOWN": {
+                "counter": 25,
+                "value": -0.00012384443992272397
+            },
+            "LEFT": {
+                "counter": 2157,
+                "value": 258.37335498312353
+            },
+            "RIGHT": {
+                "counter": 5,
+                "value": -0.000168840009247364
+            },
+            "UP": {
+                "counter": 17,
+                "value": -0.00011887847002375269
+            },
+            "counter": 2201
+        },
+        "01010010": {
+            "DOWN": {
+                "counter": 3,
+                "value": -0.09997435653905376
+            },
+            "LEFT": {
+                "counter": 6,
+                "value": 0.27057119181289824
+            },
+            "RIGHT": {
+                "counter": 5,
+                "value": 0.9671201437525117
+            },
+            "UP": {
+                "counter": 133602,
+                "value": 379.20017187173545
+            },
+            "counter": 133613
+        },
+        "01010011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 3,
+                "value": -0.00014166091505546336
+            },
+            "RIGHT": {
+                "counter": 838,
+                "value": 167.06278347848777
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 842
+        },
+        "01010100": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 20,
+                "value": -9.204347080083812e-06
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 6065,
+                "value": 329.6539896012305
+            },
+            "counter": 6084
+        },
+        "01010101": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4.399999999999999e-06
+            },
+            "LEFT": {
+                "counter": 4436,
+                "value": 217.76746881820782
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -3.6e-06
+            },
+            "counter": 4439
+        },
+        "01010110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 17744,
+                "value": 286.1589088881522
+            },
+            "counter": 17745
+        },
+        "01010111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 464,
+                "value": 99.33350411427973
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 466
+        },
+        "01011000": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": 1.0961024658733043
+            },
+            "UP": {
+                "counter": 10106,
+                "value": 340.1510030252212
+            },
+            "counter": 10107
+        },
+        "01011001": {
+            "DOWN": {
+                "counter": 6,
+                "value": -2.898075771936244e-05
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -9.960000000000001e-05
+            },
+            "RIGHT": {
+                "counter": 8351,
+                "value": 285.40881112024556
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 8358
+        },
+        "01011010": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 3,
+                "value": -7.812946501753664e-05
+            },
+            "UP": {
+                "counter": 4361,
+                "value": 272.67858899079056
+            },
+            "counter": 4363
+        },
+        "01011011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2170,
+                "value": 117.14186982115125
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 2173
+        },
+        "01011100": {
+            "DOWN": {
+                "counter": 5,
+                "value": -0.00044621438019945895
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 1177,
+                "value": 213.54344152040798
+            },
+            "counter": 1183
+        },
+        "01011101": {
+            "DOWN": {
+                "counter": 2096,
+                "value": 216.93782588682802
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 2098
+        },
+        "01011110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 443,
+                "value": 87.82173819025729
+            },
+            "counter": 444
+        },
+        "01011111": {
+            "DOWN": {
+                "counter": 107,
+                "value": -10.655843417784117
+            },
+            "LEFT": {
+                "counter": 106,
+                "value": -10.554787938990218
+            },
+            "RIGHT": {
+                "counter": 106,
+                "value": -10.554787938990218
+            },
+            "UP": {
+                "counter": 107,
+                "value": -10.655843417784117
+            },
+            "counter": 423
+        },
+        "01100000": {
+            "DOWN": {
+                "counter": 5620,
+                "value": 242.568804774762
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.00034839999999999996
+            },
+            "UP": {
+                "counter": 2,
+                "value": -2.0399999999999998e-05
+            },
+            "counter": 5622
+        },
+        "01100001": {
+            "DOWN": {
+                "counter": 99761,
+                "value": 375.3683840104608
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 1.64e-05
+            },
+            "RIGHT": {
+                "counter": 3,
+                "value": 0.0003047518291912384
+            },
+            "UP": {
+                "counter": 17,
+                "value": -0.08999919175102927
+            },
+            "counter": 99780
+        },
+        "01100010": {
+            "DOWN": {
+                "counter": 3,
+                "value": -2.0504401363060902e-05
+            },
+            "LEFT": {
+                "counter": 2651,
+                "value": 266.1387612869803
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -2.1999999999999996e-05
+            },
+            "UP": {
+                "counter": 2,
+                "value": -1.2e-06
+            },
+            "counter": 2655
+        },
+        "01100011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 389,
+                "value": 152.12347009020996
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 389
+        },
+        "01100100": {
+            "DOWN": {
+                "counter": 4,
+                "value": 0.3456068126301807
+            },
+            "LEFT": {
+                "counter": 71810,
+                "value": 334.76862829843265
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": 6.447864559750013e-06
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 71814
+        },
+        "01100101": {
+            "DOWN": {
+                "counter": 10214,
+                "value": 287.715245205041
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 0.7925905190358985
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": 0.4901493006149065
+            },
+            "counter": 10216
+        },
+        "01100110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 10684,
+                "value": 296.28423864962286
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 10684
+        },
+        "01100111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 1064,
+                "value": 133.14412683978338
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1066
+        },
+        "01101000": {
+            "DOWN": {
+                "counter": 9168,
+                "value": 346.1405586650893
+            },
+            "LEFT": {
+                "counter": 15,
+                "value": -0.0006870676425060583
+            },
+            "RIGHT": {
+                "counter": 7,
+                "value": -0.0008816962448122024
+            },
+            "UP": {
+                "counter": 11,
+                "value": -0.0007713476157158493
+            },
+            "counter": 9198
+        },
+        "01101001": {
+            "DOWN": {
+                "counter": 3243,
+                "value": 270.8789070248947
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 6,
+                "value": -0.00048317650758794567
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 3250
+        },
+        "01101010": {
+            "DOWN": {
+                "counter": 13,
+                "value": -0.09791097835764086
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 6863,
+                "value": 276.79916094194493
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.0002688
+            },
+            "counter": 6877
+        },
+        "01101011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 943,
+                "value": 105.66662444735864
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 946
+        },
+        "01101100": {
+            "DOWN": {
+                "counter": 1240,
+                "value": 208.57755755182734
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 5,
+                "value": -0.000826136830597476
+            },
+            "counter": 1246
+        },
+        "01101101": {
+            "DOWN": {
+                "counter": 318,
+                "value": 94.20276810275861
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 24,
+                "value": -0.09450241969730856
+            },
+            "counter": 343
+        },
+        "01101110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -2e-06
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 3015,
+                "value": 226.10902991444198
+            },
+            "counter": 3018
+        },
+        "01101111": {
+            "DOWN": {
+                "counter": 110,
+                "value": -10.959070491495412
+            },
+            "LEFT": {
+                "counter": 110,
+                "value": -10.959070491495412
+            },
+            "RIGHT": {
+                "counter": 110,
+                "value": -10.959070491495412
+            },
+            "UP": {
+                "counter": 110,
+                "value": -10.959070491495412
+            },
+            "counter": 437
+        },
+        "10000000": {
+            "DOWN": {
+                "counter": 3,
+                "value": 9.507174340793091e-06
+            },
+            "LEFT": {
+                "counter": 3,
+                "value": 0.0009812141449206024
+            },
+            "RIGHT": {
+                "counter": 10088,
+                "value": 236.9290182228066
+            },
+            "UP": {
+                "counter": 3,
+                "value": -7.65205301203579e-08
+            },
+            "counter": 10094
+        },
+        "10000001": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -1.72e-05
+            },
+            "RIGHT": {
+                "counter": 14971,
+                "value": 369.69467141633316
+            },
+            "UP": {
+                "counter": 2,
+                "value": -3.4748e-07
+            },
+            "counter": 14974
+        },
+        "10000010": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 13149,
+                "value": 370.0807351265807
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 13149
+        },
+        "10000011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2033,
+                "value": 273.23706829875914
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 2033
+        },
+        "10000100": {
+            "DOWN": {
+                "counter": 2,
+                "value": -3.792633505313139e-05
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -1.8e-05
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -5.999999999999999e-06
+            },
+            "UP": {
+                "counter": 267,
+                "value": 158.94088465881254
+            },
+            "counter": 270
+        },
+        "10000101": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4.2484067643331835e-05
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1616,
+                "value": 277.1190495285849
+            },
+            "counter": 1617
+        },
+        "10000110": {
+            "DOWN": {
+                "counter": 1251,
+                "value": 251.94552347648656
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -5.2030491523876e-06
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -4.1211999999999996e-07
+            },
+            "counter": 1254
+        },
+        "10000111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 14,
+                "value": 11.339279241129791
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 17
+        },
+        "10001000": {
+            "DOWN": {
+                "counter": 4,
+                "value": 0.09899307274951681
+            },
+            "LEFT": {
+                "counter": 4,
+                "value": 1.0319451337679462
+            },
+            "RIGHT": {
+                "counter": 257031,
+                "value": 374.03185372652774
+            },
+            "UP": {
+                "counter": 3,
+                "value": 0.6462916213512373
+            },
+            "counter": 257039
+        },
+        "10001001": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 13098,
+                "value": 277.33392923841967
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 13098
+        },
+        "10001010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 13209,
+                "value": 323.601809548479
+            },
+            "UP": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "counter": 13212
+        },
+        "10001011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 438,
+                "value": 135.82562832288946
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 438
+        },
+        "10001100": {
+            "DOWN": {
+                "counter": 3,
+                "value": -0.00010144176403106616
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 657,
+                "value": 194.3795101301262
+            },
+            "counter": 661
+        },
+        "10001101": {
+            "DOWN": {
+                "counter": 283,
+                "value": 140.0016367390266
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 283
+        },
+        "10001110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -4e-07
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 277,
+                "value": 91.02507846590493
+            },
+            "counter": 280
+        },
+        "10001111": {
+            "DOWN": {
+                "counter": 6,
+                "value": -0.5001000100005
+            },
+            "LEFT": {
+                "counter": 5,
+                "value": -0.4000600040001
+            },
+            "RIGHT": {
+                "counter": 5,
+                "value": -0.4000600040001
+            },
+            "UP": {
+                "counter": 5,
+                "value": -0.4000600040001
+            },
+            "counter": 18
+        },
+        "10010000": {
+            "DOWN": {
+                "counter": 5,
+                "value": -6.615885435343282e-06
+            },
+            "LEFT": {
+                "counter": 6,
+                "value": 0.002646591250565808
+            },
+            "RIGHT": {
+                "counter": 580,
+                "value": -0.09990153206956215
+            },
+            "UP": {
+                "counter": 9189,
+                "value": 270.32148341416513
+            },
+            "counter": 9777
+        },
+        "10010001": {
+            "DOWN": {
+                "counter": 13,
+                "value": -0.0002580644622146775
+            },
+            "LEFT": {
+                "counter": 6,
+                "value": -0.00020158088371208236
+            },
+            "RIGHT": {
+                "counter": 3214,
+                "value": 309.3127963611593
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.00023359999999999999
+            },
+            "counter": 3232
+        },
+        "10010010": {
+            "DOWN": {
+                "counter": 2,
+                "value": 0.07605676433835665
+            },
+            "LEFT": {
+                "counter": 3,
+                "value": 0.43145353564376765
+            },
+            "RIGHT": {
+                "counter": 7,
+                "value": 0.06037953236732894
+            },
+            "UP": {
+                "counter": 121145,
+                "value": 386.30988840844816
+            },
+            "counter": 121154
+        },
+        "10010011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 4,
+                "value": -0.0005857588110227198
+            },
+            "RIGHT": {
+                "counter": 1124,
+                "value": 216.1921341435318
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1129
+        },
+        "10010100": {
+            "DOWN": {
+                "counter": 11,
+                "value": -0.000374222548753991
+            },
+            "LEFT": {
+                "counter": 3,
+                "value": -0.00043642192
+            },
+            "RIGHT": {
+                "counter": 7,
+                "value": -0.0003793138558865304
+            },
+            "UP": {
+                "counter": 8362,
+                "value": 334.86162697634745
+            },
+            "counter": 8380
+        },
+        "10010101": {
+            "DOWN": {
+                "counter": 2,
+                "value": -1.2e-06
+            },
+            "LEFT": {
+                "counter": 5990,
+                "value": 302.62263514230995
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -2e-06
+            },
+            "counter": 5992
+        },
+        "10010110": {
+            "DOWN": {
+                "counter": 3,
+                "value": -0.09999879987999999
+            },
+            "LEFT": {
+                "counter": 1558,
+                "value": 235.9724216213272
+            },
+            "RIGHT": {
+                "counter": 5,
+                "value": -0.00038134140132275996
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.00017383231317006636
+            },
+            "counter": 1565
+        },
+        "10010111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 318,
+                "value": 57.445156400304235
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 321
+        },
+        "10011000": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 8839,
+                "value": 351.44239886613025
+            },
+            "counter": 8839
+        },
+        "10011001": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 13155,
+                "value": 289.3085945315708
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 13155
+        },
+        "10011010": {
+            "DOWN": {
+                "counter": 3,
+                "value": -0.09040439287261666
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 0.5301830199463441
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 22574,
+                "value": 328.7449140645617
+            },
+            "counter": 22577
+        },
+        "10011011": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 3350,
+                "value": 224.83625744522146
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 3350
+        },
+        "10011100": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 913,
+                "value": 223.69892105799192
+            },
+            "counter": 914
+        },
+        "10011101": {
+            "DOWN": {
+                "counter": 1603,
+                "value": 226.0286102545491
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 1,
+                "value": 0
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1604
+        },
+        "10011110": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 315,
+                "value": 120.143702184597
+            },
+            "counter": 316
+        },
+        "10011111": {
+            "DOWN": {
+                "counter": 74,
+                "value": -7.326342304993372
+            },
+            "LEFT": {
+                "counter": 75,
+                "value": -7.427074939223871
+            },
+            "RIGHT": {
+                "counter": 74,
+                "value": -7.326342304993372
+            },
+            "UP": {
+                "counter": 74,
+                "value": -7.326342304993372
+            },
+            "counter": 294
+        },
+        "10100000": {
+            "DOWN": {
+                "counter": 5129,
+                "value": 251.10205153431167
+            },
+            "LEFT": {
+                "counter": 6,
+                "value": -0.0001160292035602108
+            },
+            "RIGHT": {
+                "counter": 3,
+                "value": -0.00014999916
+            },
+            "UP": {
+                "counter": 15,
+                "value": -0.00011515834121197575
+            },
+            "counter": 5150
+        },
+        "10100001": {
+            "DOWN": {
+                "counter": 139599,
+                "value": 389.79264385625885
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 0.0033186252018818857
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": 0.019870451565007365
+            },
+            "UP": {
+                "counter": 2,
+                "value": -3.84e-05
+            },
+            "counter": 139602
+        },
+        "10100010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -2.8e-06
+            },
+            "LEFT": {
+                "counter": 2890,
+                "value": 322.1214901939448
+            },
+            "RIGHT": {
+                "counter": 8,
+                "value": -0.00011239656300691434
+            },
+            "UP": {
+                "counter": 2,
+                "value": -2e-06
+            },
+            "counter": 2899
+        },
+        "10100011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.00017730784596048875
+            },
+            "RIGHT": {
+                "counter": 722,
+                "value": 133.66862817272713
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 725
+        },
+        "10100100": {
+            "DOWN": {
+                "counter": 9838,
+                "value": 343.0004290066188
+            },
+            "LEFT": {
+                "counter": 14,
+                "value": -0.00018578411808687896
+            },
+            "RIGHT": {
+                "counter": 4,
+                "value": -0.00023720076001999997
+            },
+            "UP": {
+                "counter": 4,
+                "value": -0.000534925324937413
+            },
+            "counter": 9857
+        },
+        "10100101": {
+            "DOWN": {
+                "counter": 15513,
+                "value": 293.95011978959036
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": 1.8543202487862025
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 6,
+                "value": -0.08499702621421086
+            },
+            "counter": 15520
+        },
+        "10100110": {
+            "DOWN": {
+                "counter": 2,
+                "value": -1e-05
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.0001153956368917881
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 13613,
+                "value": 288.47749246681474
+            },
+            "counter": 13616
+        },
+        "10100111": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2795,
+                "value": 237.88558941712563
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 2798
+        },
+        "10101000": {
+            "DOWN": {
+                "counter": 5921,
+                "value": 352.69843641455634
+            },
+            "LEFT": {
+                "counter": 53,
+                "value": -0.09906651473574578
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -9.12e-05
+            },
+            "UP": {
+                "counter": 2,
+                "value": -1.24e-05
+            },
+            "counter": 5975
+        },
+        "10101001": {
+            "DOWN": {
+                "counter": 1,
+                "value": 0
+            },
+            "LEFT": {
+                "counter": 1,
+                "value": 0
+            },
+            "RIGHT": {
+                "counter": 11208,
+                "value": 292.61428083350955
+            },
+            "UP": {
+                "counter": 1,
+                "value": 0
+            },
+            "counter": 11208
+        },
+        "10101010": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2259,
+                "value": 212.6236592416522
+            },
+            "UP": {
+                "counter": 2,
+                "value": -1.2e-06
+            },
+            "counter": 2262
+        },
+        "10101011": {
+            "DOWN": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "LEFT": {
+                "counter": 10,
+                "value": -0.08970452694576699
+            },
+            "RIGHT": {
+                "counter": 805,
+                "value": 122.32894349516918
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 816
+        },
+        "10101100": {
+            "DOWN": {
+                "counter": 1050,
+                "value": 196.85279049207062
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 4,
+                "value": -0.0005084952213245995
+            },
+            "counter": 1055
+        },
+        "10101101": {
+            "DOWN": {
+                "counter": 1683,
+                "value": 142.51514324130903
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "counter": 1686
+        },
+        "10101110": {
+            "DOWN": {
+                "counter": 3,
+                "value": -0.10000120012000002
+            },
+            "LEFT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "RIGHT": {
+                "counter": 2,
+                "value": -0.1
+            },
+            "UP": {
+                "counter": 1666,
+                "value": 115.28774176261815
+            },
+            "counter": 1670
+        },
+        "10101111": {
+            "DOWN": {
+                "counter": 139,
+                "value": -13.894959986193715
+            },
+            "LEFT": {
+                "counter": 139,
+                "value": -13.894959986193715
+            },
+            "RIGHT": {
+                "counter": 138,
+                "value": -13.793580628130902
+            },
+            "UP": {
+                "counter": 139,
+                "value": -13.894959986193715
+            },
+            "counter": 552
+        }
+    },
+    "header": {
+        "game_config": {
+            "action_taker_policy": 1,
+            "background_color": [
+                67,
+                59,
+                103
+            ],
+            "block_interactions": false,
+            "block_size": 20,
+            "change_agent_episode": 200,
+            "default_reward": 0,
+            "font_color": [
+                200,
+                112,
+                126
+            ],
+            "font_size": 50,
+            "food_color": [
+                200,
+                112,
+                126
+            ],
+            "food_reward": 10,
+            "head_color": [
+                0,
+                255,
+                150
+            ],
+            "missed_food_max_steps": 1000,
+            "number_of_episodes": 332400,
+            "punishment": -10,
+            "run_for_n_minutes": 20,
+            "screen_height": 600,
+            "screen_width": 600,
+            "show_game": false,
+            "snake_color": [
+                200,
+                112,
+                126
+            ],
+            "speed_delta": 10,
+            "swallow_color": [
+                0,
+                71,
+                48
+            ]
+        },
+        "snake_config": {
+            "initial_length": 1,
+            "random_initial_pos": true,
+            "speed": 0
+        },
+        "state_meaning": {
+            "0": "food_right",
+            "1": "food_left",
+            "2": "food_below",
+            "3": "food_above",
+            "4": "danger_left",
+            "5": "danger_right",
+            "6": "danger_down",
+            "7": "danger_up"
+        },
+        "statistics": {
+            "agent": {
+                "epsilon": 6.52121318022603e-06,
+                "epsilon_step_increment": 0.1,
+                "gamma": 1.01,
+                "name": "q_learning",
+                "use_individual_policies": false
+            },
+            "best_score": 90,
+            "best_score_episode": 1742,
+            "died_body": 1864,
+            "died_wall": 244,
+            "dumb_snake": 2,
+            "seconds": 194
+        }
+    }
+}

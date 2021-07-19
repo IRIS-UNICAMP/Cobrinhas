@@ -140,6 +140,9 @@ class SnakeGame:
     died_wall_hit_counter = 0
     died_body_hit_counter = 0
 
+    dist = 0
+    last_dist = 0
+
     human_turn: bool = False
     food_ai_turn: bool = False
 
@@ -374,7 +377,12 @@ class SnakeGame:
                         reward = self.game_config.food_reward
                     else:
                         missed_food_times += 1
-                        reward = self.game_config.default_reward
+                        self.dist = self.snake.distance_to_food(self.food)
+                        reward = (self.last_dist - self.dist) * 0.0000001
+                        # print(f"last {self.last_dist}; current {self.dist}; reward {reward}")
+                        # print(reward)
+                        self.last_dist = self.dist
+                        # reward = self.game_config.default_reward
 
                     # save the reward history. some agents might use this info
                     self.agent.save_to_history(self.state.value, action, reward)

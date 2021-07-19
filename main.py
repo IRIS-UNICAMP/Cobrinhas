@@ -82,7 +82,7 @@ def run():
     )
 
     q_learning_agent = QLearning(
-        gamma=1.01,
+        gamma=0.5,
         epsilon_step_increment=0.1,
         initial_epsilon=1,
         learning_incentive=False,

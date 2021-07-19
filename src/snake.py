@@ -6,6 +6,7 @@ import pygame
 from pygame import Surface
 
 from src.configs import GameConfig, SnakeConfig
+from src.food import Food
 from src.shared import Velocity, Coord, Direction, Problem
 
 
@@ -61,6 +62,9 @@ class Snake:
             if len(self._body) > 1:
                 self._paint_block(self._body[1])
         self._paint_head(head)
+
+    def distance_to_food(self, food: Food):
+        return pow(self.head.x - food.position.x, 2) + pow(self.head.y - food.position.y, 2)
 
     def _snaky_linearized_screen(self, max_length=-1) -> List[Coord]:
         """

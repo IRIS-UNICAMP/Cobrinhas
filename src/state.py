@@ -11,11 +11,20 @@ class StateInfo:
     value: bool
     name: str
 
+    def __str__(self):
+        return str(int(self.value))
+
+
+@dataclass
+class SnakeSize(StateInfo):
+    def __str__(self):
+        return f"_{self.value}"
+
 
 def build_state_str(values: List[StateInfo]):
     state = ''
     for v in values:
-        state += str(int(v.value))
+        state += str(v)
     return state
 
 
@@ -47,7 +56,7 @@ class State:
     going_right_danger_ahead: StateInfo = StateInfo(False, "going_right_danger_ahead")
     going_down_danger_ahead: StateInfo = StateInfo(False, "going_down_danger_ahead")
     going_up_danger_ahead: StateInfo = StateInfo(False, "going_up_danger_ahead")
-
+    snake_size: SnakeSize = SnakeSize(False, "snake_size")
 
     def dict(self):
         return {index: state_info.name for index, state_info in enumerate(self._state_values)}
@@ -57,7 +66,7 @@ class State:
         return self._state
 
     def set_state(self):
-
+        self.snake_size.__str__()
         # O estado é uma string de uma sequência de digitos que será recebido por uma
         # função ação valor para decidir o movimento da cobrinha.
         self._state_values = [
@@ -77,15 +86,16 @@ class State:
             # self._body_below,
             # going_to_food,
             # danger_ahead,
-            self.going_left,
-            self.going_right,
-            self.going_down,
-            self.going_up,
+            # self.going_left,
+            # self.going_right,
+            # self.going_down,
+            # self.going_up,
 
             self.danger_left,
             self.danger_right,
             self.danger_down,
             self.danger_up,
+            # self.snake_size,
         ]
         state = build_state_str(self._state_values)
         # state += str(int(self._going_left))
@@ -104,6 +114,8 @@ class State:
     
     def populate(self, snake: Snake, food_pos: Coord, game_config: GameConfig):
         block = game_config.block_size
+        self.snake_size.value = len(snake.body)
+
         # Posicao da comida relativa a cobrinha
         self.food_right.value = snake.head.x - food_pos.x < 0
         self.food_left.value = snake.head.x - food_pos.x > 0
