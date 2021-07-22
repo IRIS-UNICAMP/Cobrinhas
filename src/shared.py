@@ -10,6 +10,10 @@ import pygame
 class Velocity:
     x: int
     y: int
+    label: str
+
+    def __str__(self):
+        return self.label
 
 
 @dataclass(frozen=True)
@@ -74,10 +78,10 @@ class Colors(Enum):
 
 class Direction:
     def __init__(self, block_size):
-        self.up = Velocity(0, -block_size)
-        self.down = Velocity(0, block_size)
-        self.left = Velocity(-block_size, 0)
-        self.right = Velocity(block_size, 0)
+        self.up = Velocity(0, -block_size, "up")
+        self.down = Velocity(0, block_size, "down")
+        self.left = Velocity(-block_size, 0, "left")
+        self.right = Velocity(block_size, 0, "right")
 
     def all(self) -> List[Velocity]:
         return [self.up, self.down, self.left, self.right]

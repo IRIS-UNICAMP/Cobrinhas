@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Set
 
 from src.configs import GameConfig
-from src.shared import Coord
+from src.shared import Coord, Direction
 from src.snake import Snake
 
 
@@ -31,6 +31,8 @@ def build_state_str(values: List[StateInfo]):
 class State:
     _state: str
     _state_values: List[StateInfo]
+    should_put_snake_sideways_info: bool = False
+    should_pause: bool = False
 
     food_right: StateInfo = StateInfo(False, "food_right")
     food_left: StateInfo = StateInfo(False, "food_left")
@@ -56,7 +58,10 @@ class State:
     going_right_danger_ahead: StateInfo = StateInfo(False, "going_right_danger_ahead")
     going_down_danger_ahead: StateInfo = StateInfo(False, "going_down_danger_ahead")
     going_up_danger_ahead: StateInfo = StateInfo(False, "going_up_danger_ahead")
+    up_has_more_available_parts: StateInfo = StateInfo(False, "up_has_more_available_parts")
+    down_has_more_available_parts: StateInfo = StateInfo(False, "down_has_more_available_parts")
     left_has_more_available_parts: StateInfo = StateInfo(False, "left_has_more_available_parts")
+    right_has_more_available_parts: StateInfo = StateInfo(False, "right_has_more_available_parts")
     snake_size: SnakeSize = SnakeSize(False, "snake_size")
 
     def dict(self):
@@ -87,18 +92,28 @@ class State:
             # self._body_below,
             # going_to_food,
             # danger_ahead,
-            # self.going_left,
-            # self.going_right,
-            # self.going_down,
-            # self.going_up,
+            self.going_left,
+            self.going_right,
+            self.going_down,
+            self.going_up,
 
             self.danger_left,
             self.danger_right,
             self.danger_down,
             self.danger_up,
             # self.snake_size,
-            self.left_has_more_available_parts
         ]
+
+        if self.should_put_snake_sideways_info:
+            self._state_values.extend(
+                [
+                    self.up_has_more_available_parts,
+                    self.down_has_more_available_parts,
+                    self.left_has_more_available_parts,
+                    self.right_has_more_available_parts,
+                ]
+            )
+
         state = build_state_str(self._state_values)
         # state += str(int(self._going_left))
         # state += str(int(self._going_right))
@@ -113,8 +128,8 @@ class State:
         # 1010100011001
 
         self._state = state
-    
-    def populate(self, snake: Snake, food_pos: Coord, game_config: GameConfig):
+
+    def populate(self, snake: Snake, food_pos: Coord, game_config: GameConfig, available_positions: Set[Coord]):
         block = game_config.block_size
         self.snake_size.value = len(snake.body)
 
@@ -146,7 +161,7 @@ class State:
         self.danger_right.value = self.wall_right.value or self.body_right.value
         self.danger_down.value = self.wall_below.value or self.body_below.value
         self.danger_up.value = self.wall_above.value or self.body_above.value
-        
+
         # Se há parede e está indo em direção a ela --Perigo--
         going_left_wall_ahead = self.going_left.value and self.wall_left.value
         going_right_wall_ahead = self.going_right.value and self.wall_right.value
@@ -173,15 +188,59 @@ class State:
         going_to_food_below = self.food_below.value and self.going_down.value
 
         going_to_food = going_to_food_below or going_to_food_above or going_to_food_left or going_to_food_right
-        
+
         self.going_left_danger_ahead = going_left_wall_ahead or going_left_body_ahead
         self.going_right_danger_ahead = going_right_wall_ahead or going_right_body_ahead
         self.going_down_danger_ahead = going_down_wall_ahead or going_down_body_ahead
         self.going_up_danger_ahead = going_up_wall_ahead or going_up_body_ahead
 
-        self.left_has_more_available_parts.value = len(snake.leftmost_positions) > len(snake.rightmost_positions)
+        if any([
+            self.going_left_danger_ahead,
+            self.going_right_danger_ahead,
+            self.going_down_danger_ahead,
+            self.going_up_danger_ahead]
+        ):
+            snake.sideways_xray(list(available_positions))
+            if game_config.paint_sideways:
+                snake.paint_sideways()
+
+            self.up_has_more_available_parts.value = False
+            self.down_has_more_available_parts.value = False
+            self.left_has_more_available_parts.value = False
+            self.right_has_more_available_parts.value = False
+
+            relative_left_has_more = len(snake.leftmost_positions) > len(snake.rightmost_positions)
+            direction = Direction(game_config.block_size)
+            if snake.velocity == direction.up:
+                if relative_left_has_more:
+                    self.left_has_more_available_parts.value = True
+                else:
+                    self.right_has_more_available_parts.value = True
+            elif snake.velocity == direction.down:
+                if relative_left_has_more:
+                    self.right_has_more_available_parts.value = True
+                else:
+                    self.left_has_more_available_parts.value = True
+            elif snake.velocity == direction.left:
+                if relative_left_has_more:
+                    self.down_has_more_available_parts.value = True
+                else:
+                    self.up_has_more_available_parts.value = True
+            else:
+                if relative_left_has_more:
+                    self.up_has_more_available_parts.value = True
+                else:
+                    self.down_has_more_available_parts.value = True
+
+            self.should_put_snake_sideways_info = True
+            if game_config.pause_when_danger:
+                self.should_pause = True
+        else:
+            self.should_put_snake_sideways_info = False
+            self.should_pause = False
 
         return self
 
-    def __str__(self):
-        return self.value
+
+def __str__(self):
+    return self.value

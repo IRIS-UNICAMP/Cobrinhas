@@ -27,6 +27,8 @@ class GameConfig:
     run_for_n_minutes: int
     change_agent_episode: int
     paint_sideways: bool
+    pause_when_dead: bool
+    pause_when_danger: bool
 
 
 @dataclass()

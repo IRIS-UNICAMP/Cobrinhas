@@ -164,7 +164,7 @@ class SnakeGame:
             self.food_ai_turn = True
 
         if not self.game_config.run_for_n_minutes == 0:
-            self.game_config.number_of_episodes = self.game_config.run_for_n_minutes * 60 * 277  # 277 is a raw estimate
+            self.game_config.number_of_episodes = 10000 # self.game_config.run_for_n_minutes * 60 * 277  # 277 is a raw estimate
 
     def update_display(self):
         if self.game_config.show_game:
@@ -232,6 +232,15 @@ class SnakeGame:
     def top_right(self):
         return Coord(self.game_config.screen_width, 0)
 
+    def repaint_everything(self):
+        self.show_score()
+        self.screen.fill(self.game_config.background_color)
+        self.snake.paint()
+        self.snake.paint_sideways()
+        self.food.paint()
+        self.snake.paint_head(self.snake.head)
+        self.update_display()
+
     def process_events(self):
         # Here we process the generated events by the agent and analyze the results
         for event in pygame.event.get():
@@ -262,13 +271,24 @@ class SnakeGame:
 
                 elif event.key == pygame.K_s:
                     self.game_config.show_game = not self.game_config.show_game
+                    print(f"toggled show_game to {self.game_config.show_game}")
 
                 elif event.key == pygame.K_w:
                     self.game_config.paint_sideways = not self.game_config.paint_sideways
+                    print(f"toggled paint_sideways to {self.game_config.paint_sideways}")
+
+                elif event.key == pygame.K_d:
+                    self.game_config.pause_when_dead = not self.game_config.pause_when_dead
+                    print(f"toggled pause_when_dead to {self.game_config.pause_when_dead}")
+
+                elif event.key == pygame.K_f:
+                    self.game_config.pause_when_danger = not self.game_config.pause_when_danger
+                    print(f"toggled pause_when_danger to {self.game_config.pause_when_danger}")
 
                 elif event.key == pygame.K_p:
                     # toggle pause
                     self.paused = not self.paused
+                    print(f"toggled paused to {self.paused}")
                     self.toggle_pause_text()
                 elif self.paused and event.key in unpause_keys and hasattr(event, "scancode"):
                     self.paused = False
@@ -323,6 +343,11 @@ class SnakeGame:
 
     def loop(self):
         while self.current_episode < self.game_config.number_of_episodes:
+            while self.paused:
+                # process events one more time so we can listen for 'p' key
+                self.process_events()
+                self.clock.tick(self.snake_config.speed)
+                continue
             # Repaint the whole screen
             self.screen.fill(self.game_config.background_color)
             self.snake = Snake(self.game_config, self.screen, self.snake_config, list(self.screen_coords_list))
@@ -335,7 +360,8 @@ class SnakeGame:
             try:
                 # Running an episode
                 missed_food_times = 0
-                self.state.populate(self.snake, self.food.position, self.game_config).set_state()
+                self.state.populate(self.snake, self.food.position, self.game_config,
+                                    self.available_positions).set_state()
                 self.snake.sideways_xray(list(self.available_positions))
                 self.snake.paint_sideways()
                 while True:
@@ -344,6 +370,9 @@ class SnakeGame:
                         self.process_events()
                         self.clock.tick(self.snake_config.speed)
                         continue
+
+                    if self.state.should_put_snake_sideways_info:
+                        self.snake.erase_sideways()
 
                     if self.food_ai_turn:
                         action = food_based_action(self.food, self.snake, self.state)
@@ -360,16 +389,8 @@ class SnakeGame:
                     # process events (there might be others besides snake velocity changes)
                     self.process_events()
 
-                    # clear sideways
-                    if self.game_config.paint_sideways:
-                        self.snake.erase_sideways()
-
                     # make the snake slither and catch the problems encountered
                     problem: Problem = self.snake.slither(has_eaten)
-
-                    self.snake.sideways_xray(list(self.available_positions))
-                    if self.game_config.paint_sideways:
-                        self.snake.paint_sideways()
 
                     # helper flag to decide whether to pop or not pop the tail
                     has_eaten = False
@@ -390,33 +411,41 @@ class SnakeGame:
                         reward = self.game_config.food_reward
                     else:
                         missed_food_times += 1
-                        self.dist = self.snake.distance_to_food(self.food)
-                        reward = (self.last_dist - self.dist) * 0.0000001
+                        # self.dist = self.snake.distance_to_food(self.food)
+                        # reward = (self.last_dist - self.dist) * 0.0000001
                         # print(f"last {self.last_dist}; current {self.dist}; reward {reward}")
                         # print(reward)
-                        self.last_dist = self.dist
-                        # reward = self.game_config.default_reward
+                        # self.last_dist = self.dist
+                        reward = self.game_config.default_reward * pow(missed_food_times, len(self.snake.body)/100)
 
                     # save the reward history. some agents might use this info
                     self.agent.save_to_history(self.state.value, action, reward)
 
                     # populate new state
-                    self.state.populate(self.snake, self.food.position, self.game_config).set_state()
+                    self.state.populate(self.snake, self.food.position, self.game_config,
+                                        self.available_positions).set_state()
 
                     # The agent might need to make a step reinforcement
                     self.agent.step_reinforcement(reward, self.state.value)
 
                     self.update_display()
 
+                    if self.state.should_pause:
+                        self.repaint_everything()
+                        print(f"blocks on sideways "
+                              f"left: {len(self.snake.leftmost_positions)}, "
+                              f"right: {len(self.snake.rightmost_positions)}")
+                        self.paused = True
+
                     # now, check for problems
                     if problem is not None:
                         msg = ""
                         if problem == Problem.WALL_HIT:
                             self.died_wall_hit_counter += 1
-                            msg = f"The snake died from wall hit at coords ({self.snake.head.x},{self.snake.head.y})"
+                            msg = f"The snake died from wall hit with velocity {self.snake.velocity}"
                         elif problem == Problem.BODY_HIT:
                             self.died_body_hit_counter += 1
-                            msg = f"The snake died from body hit at coords ({self.snake.head.x},{self.snake.head.y})"
+                            msg = f"The snake died from body hit with velocity {self.snake.velocity}"
                         elif problem == Problem.TOO_DUMB:
                             self.too_dumb_counter += 1
                             msg = "The snake didn't know what to do.."
@@ -457,6 +486,13 @@ class SnakeGame:
             # if self.current_episode % 10 == 0 or has_best_score:
             self._scores.append(int(self.food.score))
             self._scores_episode.append(self.current_episode)
+
+            if self.game_config.pause_when_dead:
+                self.repaint_everything()
+                print(f"blocks on sideways "
+                      f"left: {len(self.snake.leftmost_positions)}, "
+                      f"right: {len(self.snake.rightmost_positions)}")
+                self.paused = True
 
         # End of experiment!!
         print(f"End of experiment.\n"

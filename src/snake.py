@@ -63,7 +63,7 @@ class Snake:
             self._erase_block(tail)
             if len(self._body) > 1:
                 self._paint_block(self._body[1])
-        self._paint_head(head)
+        self.paint_head(head)
 
     def paint_sideways(self):
         if self.game_config.paint_sideways:
@@ -209,7 +209,7 @@ class Snake:
             pygame.draw.rect(self.screen, self.game_config.background_color,
                              [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
 
-    def _paint_head(self, coord: Coord):
+    def paint_head(self, coord: Coord):
         if self.game_config.show_game:
             pygame.draw.rect(self.screen, self.game_config.head_color,
                              [coord.x, coord.y, self.game_config.block_size, self.game_config.block_size])
