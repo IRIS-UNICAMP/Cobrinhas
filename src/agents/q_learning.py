@@ -1,3 +1,5 @@
+from typing import List
+
 from src.agents.abstract_agent import AbstractAgent
 from src.shared import Action, Policy, StateActionInfo
 
@@ -54,6 +56,16 @@ class QLearning(AbstractAgent):
             }
         else:
             return data
+
+    def plottable_configs(self) -> List[str]:
+        labels = [
+            f"gamma={self._gamma}",
+            f"ind_policies={self._use_individual_policies}",
+            f"learning_incentive={self._learning_incentive}",
+            f"epsilon_step_inc={self._epsilon_step_increment}",
+            f"alpha={self._alpha}",
+        ]
+        return labels
 
     def init_state_if_needed(self, state: str) -> bool:
         # Initializing specific state dict
