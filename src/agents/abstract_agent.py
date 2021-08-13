@@ -90,6 +90,10 @@ class AbstractAgent(ABC):
     def state_actions(self, state: str) -> List[StateActionInfo]:
         return [self._state_action_value[state][x.value] for x in self._actions]
 
+    @abstractmethod
+    def plottable_configs(self) -> List[str]:
+        pass
+
     @property
     def policy(self) -> Policy:
         if self._use_individual_policies:

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import Axes, Figure
+import matplotlib.patches as mpl_patches
 from pathlib import Path
+
+from src.agents.abstract_agent import AbstractAgent
 from src.agents.monte_carlo import MonteCarloAgent
 from src.agents.q_learning import QLearning
 from src.configs import GameConfig, SnakeConfig
@@ -12,7 +14,8 @@ import json
 from os import system, name
 
 
-def dump_results_to_file(result, episodes, scores, mean, variance):
+def dump_results_to_file(result, episodes, scores, mean, variance, option, agent: AbstractAgent,
+                         game_config: GameConfig):
     timestamp = math.floor(time())
     folder = f"results/result_{timestamp}_score_{result['header']['statistics']['best_score']}"
     Path(folder).mkdir(parents=True, exist_ok=True)
@@ -21,27 +24,45 @@ def dump_results_to_file(result, episodes, scores, mean, variance):
     with open(f"{folder}/info.json", "w") as fp:
         json.dump(result, fp, sort_keys=True, indent=4)
 
+    with open(f"{folder}/mean_variance.json", "w") as fp:
+        data = {
+            "mean": mean,
+            "variance": variance
+        }
+        json.dump(data, fp, sort_keys=True, indent=4)
+
+    action_policy_is_mixed_food_ai = game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI
+    labels = agent.plottable_configs()
+    labels.extend(
+        [
+            f"food_reward={game_config.food_reward}",
+            f"punishment={game_config.punishment}",
+            f"action_taker_policy={game_config.action_taker_policy.name}",
+            f"change_agent_episode={game_config.change_agent_episode if action_policy_is_mixed_food_ai else 'NA'}",
+        ]
+    )
+
+    # create a list with two empty handles (or more if needed)
+    handles = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white",
+                                     lw=0, alpha=0)] * len(labels)
+
+    title = "Monte Carlo" if option == 1 else "Q Learning"
+
+    plt.suptitle(title)
+    plt.subplot(1, 2, 1)
     plt.scatter(episodes, scores)
     plt.xlabel('episode')
     plt.ylabel('score')
+    plt.legend(handles, labels, loc='best', fontsize='small',
+               fancybox=True, framealpha=0.7,
+               handlelength=0, handletextpad=0)
+
+    plt.subplot(1, 2, 2)
+    plt.scatter(episodes, mean, color="b", label="Mean")
+    plt.scatter(episodes, variance, color="r", label="Variance")
+    plt.legend()
+
     plt.savefig(f"{folder}/scores.png")
-    plt.clf()
-
-    fig: Figure = plt.figure()
-    ax: Axes = plt.gca()
-    ax.set_xlabel("episode")
-    ax.scatter(episodes, mean, color="b", label="Mean")
-    ax.scatter(episodes, variance, color="r", label="Variance")
-    ax.legend()
-    fig.add_axes(ax)
-    plt.subplot()
-    fig.savefig(f"{folder}/mean_variance.png")
-
-
-def plot_results(x, y, label):
-    plt.scatter(x, y)
-    plt.xlabel('episode')
-    plt.ylabel(label)
     plt.show()
 
 
@@ -124,13 +145,10 @@ Digite o número: """))
     result, episodes, scores, mean, variance = _game.loop()
     end = time()
 
-    _time = math.floor(end-start)
+    _time = math.floor(end - start)
     if isinstance(result, dict):
         result["header"]["statistics"]["seconds"] = _time
-        dump_results_to_file(result, episodes, scores, mean, variance)
-        plot_results(episodes, scores, "score")
-        plot_results(episodes, mean, "mean")
-        plot_results(episodes, variance, "variance")
+        dump_results_to_file(result, episodes, scores, mean, variance, option, agent, _game_config)
     print(f"\nElapsed time: {_time} seconds")
 
 
