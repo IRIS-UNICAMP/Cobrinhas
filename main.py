@@ -47,7 +47,7 @@ def dump_results_to_file(result, episodes, scores, mean, variance, option, agent
                                      lw=0, alpha=0)] * len(labels)
 
     title = "Monte Carlo" if option == 1 else "Q Learning"
-
+    plt.rcParams["figure.figsize"] = [16, 9]
     plt.suptitle(title)
     plt.subplot(1, 2, 1)
     plt.scatter(episodes, scores)
@@ -62,7 +62,8 @@ def dump_results_to_file(result, episodes, scores, mean, variance, option, agent
     plt.scatter(episodes, variance, color="r", label="Variance")
     plt.legend()
 
-    plt.savefig(f"{folder}/scores.png")
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig(f"{folder}/scores.png", dpi=300)
     plt.show()
 
 
