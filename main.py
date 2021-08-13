@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import Axes, Figure
 from pathlib import Path
 from src.agents.monte_carlo import MonteCarloAgent
 from src.agents.q_learning import QLearning
@@ -11,7 +12,7 @@ import json
 from os import system, name
 
 
-def dump_results_to_file(result, x, y):
+def dump_results_to_file(result, episodes, scores, mean, variance):
     timestamp = math.floor(time())
     folder = f"results/result_{timestamp}_score_{result['header']['statistics']['best_score']}"
     Path(folder).mkdir(parents=True, exist_ok=True)
@@ -20,16 +21,27 @@ def dump_results_to_file(result, x, y):
     with open(f"{folder}/info.json", "w") as fp:
         json.dump(result, fp, sort_keys=True, indent=4)
 
-    plt.scatter(x, y)
+    plt.scatter(episodes, scores)
     plt.xlabel('episode')
     plt.ylabel('score')
-    plt.savefig(f"{folder}/graph.png")
+    plt.savefig(f"{folder}/scores.png")
+    plt.clf()
+
+    fig: Figure = plt.figure()
+    ax: Axes = plt.gca()
+    ax.set_xlabel("episode")
+    ax.scatter(episodes, mean, color="b", label="Mean")
+    ax.scatter(episodes, variance, color="r", label="Variance")
+    ax.legend()
+    fig.add_axes(ax)
+    plt.subplot()
+    fig.savefig(f"{folder}/mean_variance.png")
 
 
-def plot_results(x, y):
+def plot_results(x, y, label):
     plt.scatter(x, y)
     plt.xlabel('episode')
-    plt.ylabel('score')
+    plt.ylabel(label)
     plt.show()
 
 
@@ -52,7 +64,7 @@ def run():
         swallow_color=Colors.SWALLOW_GREEN.value,
         head_color=Colors.HEAD.value,
         block_size=20,
-        number_of_episodes=100000,
+        number_of_episodes=27000,
         block_interactions=False,
         missed_food_max_steps=1000,
         action_taker_policy=ActionTakerPolicy.AI_AGENT,
@@ -61,7 +73,6 @@ def run():
         punishment=-10,
         show_game=False,
         speed_delta=10,
-        run_for_n_minutes=20,
         change_agent_episode=200
     )
 
@@ -110,14 +121,16 @@ Digite o número: """))
 
     start = time()
     # Run the game
-    result, x, y = _game.loop()
+    result, episodes, scores, mean, variance = _game.loop()
     end = time()
 
     _time = math.floor(end-start)
     if isinstance(result, dict):
         result["header"]["statistics"]["seconds"] = _time
-        dump_results_to_file(result, x, y)
-        plot_results(x, y)
+        dump_results_to_file(result, episodes, scores, mean, variance)
+        plot_results(episodes, scores, "score")
+        plot_results(episodes, mean, "mean")
+        plot_results(episodes, variance, "variance")
     print(f"\nElapsed time: {_time} seconds")
 
 

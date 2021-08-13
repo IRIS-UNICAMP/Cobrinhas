@@ -5,6 +5,7 @@ from pygame import Surface
 from pygame.time import Clock
 
 from typing import Set
+from statistics import mean, pvariance
 
 from src.agents.abstract_agent import AbstractAgent
 from src.configs import GameConfig, SnakeConfig
@@ -122,6 +123,8 @@ class SnakeGame:
     paused: bool = False
 
     _scores = []
+    _mean = []
+    _variance = []
     _scores_episode = []
 
     # font_position: Coord = None
@@ -162,9 +165,6 @@ class SnakeGame:
 
         if game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
             self.food_ai_turn = True
-
-        if not self.game_config.run_for_n_minutes == 0:
-            self.game_config.number_of_episodes = self.game_config.run_for_n_minutes * 60 * 277  # 277 is a raw estimate
 
     def update_display(self):
         if self.game_config.show_game:
@@ -409,7 +409,7 @@ class SnakeGame:
                             msg = "The snake didn't know what to do.."
                         elif problem == Problem.QUIT:
                             print('Exiting..')
-                            return self.build_dump_object_info(), self._scores_episode, self._scores
+                            return self.build_dump_object_info(), self._scores_episode, self._scores, self._mean, self._variance
 
                         print(msg)
                         # if there's a problem, we should end this episode
@@ -419,7 +419,7 @@ class SnakeGame:
 
             except QuitGame:
                 print('Exiting..')
-                return self.build_dump_object_info(), self._scores_episode, self._scores
+                return self.build_dump_object_info(), self._scores_episode, self._scores, self._mean, self._variance
 
             if self.game_config.action_taker_policy == ActionTakerPolicy.MIXED_FOOD_AI:
                 if self.current_episode > self.game_config.change_agent_episode:
@@ -443,10 +443,13 @@ class SnakeGame:
 
             # if self.current_episode % 10 == 0 or has_best_score:
             self._scores.append(int(self.food.score))
+            _current_mean = mean(self._scores)
+            self._mean.append(_current_mean)
+            self._variance.append(pvariance(self._scores, _current_mean))
             self._scores_episode.append(self.current_episode)
 
         # End of experiment!!
         print(f"End of experiment.\n"
               f"Best score was {self.best_score}\n")
 
-        return self.build_dump_object_info(), self._scores_episode, self._scores
+        return self.build_dump_object_info(), self._scores_episode, self._scores, self._mean, self._variance
